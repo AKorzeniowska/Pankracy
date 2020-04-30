@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Pankracy</string>
+    <string name="plant_list_button">Plant list</string>
+    <string name="calendar_button">Calendar</string>
+</resources>
