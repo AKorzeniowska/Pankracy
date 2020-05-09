@@ -14,7 +14,6 @@ public class PlantDBHelper extends SQLiteOpenHelper {
             PlantEntry.COLUMN_NAME + " TEXT NOT NULL, " +
             PlantEntry.COLUMN_SPECIES + " TEXT, " +
             PlantEntry.COLUMN_WATERING + " INTEGER NOT NULL, " +
-            PlantEntry.COLUMN_FERTILIZING + " INTEGER, " +
             PlantEntry.COLUMN_MIN_TEMP + " INTEGER, " +
             PlantEntry.COLUMN_LAST_WATERING + " TEXT NOT NULL);";
 
@@ -32,7 +31,7 @@ public class PlantDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        db.execSQL(SQL_DELETE_TABLE_PLANTS_DATA);
-//        onCreate(db);
+        db.execSQL(SQL_DELETE_TABLE_PLANTS_DATA);
+        db.execSQL(SQL_CREATE_TABLE_PLANTS_DATA);
     }
 }

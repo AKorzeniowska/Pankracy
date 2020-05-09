@@ -118,4 +118,9 @@ public class PlantProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         return database.update(PlantEntry.TABLE_NAME, values, selection, selectionArgs);
     }
+
+    public void truncatePlantsTable(){
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        database.execSQL("DELETE FROM " + PlantEntry.TABLE_NAME + ";");
+    }
 }

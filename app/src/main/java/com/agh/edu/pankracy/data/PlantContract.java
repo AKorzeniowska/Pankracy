@@ -22,7 +22,6 @@ public final class PlantContract {
         public final static String COLUMN_NAME = "name";
         public final static String COLUMN_SPECIES = "species";
         public final static String COLUMN_WATERING = "watering";
-        public final static String COLUMN_FERTILIZING = "fertilizing";
         public final static String COLUMN_MIN_TEMP = "min_temperature";
         public final static String COLUMN_LAST_WATERING = "last_watering";
 

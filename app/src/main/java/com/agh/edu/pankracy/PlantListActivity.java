@@ -3,9 +3,12 @@ package com.agh.edu.pankracy;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,7 +23,6 @@ public class PlantListActivity extends AppCompatActivity {
     private ArrayList<String> listViewData = new ArrayList<>();
     private ArrayList<Integer> idList = new ArrayList<>();
     private final static String FINAL_PLANT_ID = "final_plant_id";
-    private EditText searchEditText;
     private ListView listView;
 
     @Override
@@ -33,6 +35,7 @@ public class PlantListActivity extends AppCompatActivity {
 
         addDummyData();
         listGetter();
+        chosenPlantIntentCreator();
     }
 
     @Override
@@ -75,8 +78,7 @@ public class PlantListActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put(PlantEntry.COLUMN_NAME, "testname1");
         values.put(PlantEntry.COLUMN_SPECIES, "testspecies1");
-        values.put(PlantEntry.COLUMN_WATERING, "testwatering1");
-        values.put(PlantEntry.COLUMN_FERTILIZING, 1);
+        values.put(PlantEntry.COLUMN_WATERING, 6);
         values.put(PlantEntry.COLUMN_MIN_TEMP, 1);
         values.put(PlantEntry.COLUMN_LAST_WATERING, "lastwatering1");
 
@@ -85,11 +87,23 @@ public class PlantListActivity extends AppCompatActivity {
         values = new ContentValues();
         values.put(PlantEntry.COLUMN_NAME, "testname2");
         values.put(PlantEntry.COLUMN_SPECIES, "testspecies2");
-        values.put(PlantEntry.COLUMN_WATERING, "testwatering2");
-        values.put(PlantEntry.COLUMN_FERTILIZING, 2);
+        values.put(PlantEntry.COLUMN_WATERING, 7);
         values.put(PlantEntry.COLUMN_MIN_TEMP, 2);
         values.put(PlantEntry.COLUMN_LAST_WATERING, "lastwatering2");
 
         newUri = getContentResolver().insert(PlantEntry.CONTENT_URI, values);
+    }
+
+    private void chosenPlantIntentCreator(){
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent chosenPlantIntent = new Intent(PlantListActivity.this, PlantDetailsActivity.class);
+                chosenPlantIntent.putExtra(FINAL_PLANT_ID, idList.get(position));
+                startActivity(chosenPlantIntent);
+                finish();
+            }
+        });
     }
 }
