@@ -2,4 +2,10 @@
     <string name="app_name">Pankracy</string>
     <string name="plant_list_button">Plant list</string>
     <string name="calendar_button">Calendar</string>
+
+    <string name="test_weather_button">Weather (test)</string>
+    <string name="api_error_message">An error occurred while loading the API call results.</string>
+    <string name="title_activity_weather_test">WeatherTestActivity</string>
+    <string name="weather_test_text">Weather…</string>
+    <string name="action_settings">Test</string>
 </resources>
