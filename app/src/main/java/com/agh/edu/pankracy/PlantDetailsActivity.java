@@ -89,12 +89,12 @@ public class PlantDetailsActivity extends AppCompatActivity {
         minTempText.setText(minTemperature.toString());
     }
 
-//    public void editPlant (View view) {
-//        Intent editPlantIntent = new Intent(PlantDetailsActivity.this, EditPlantActivity.class);
-//        editPlantIntent.putExtra(FINAL_PLANT_ID, id);
-//        startActivity(editPlantIntent);
-//        finish();
-//    }
+    public void editPlant (View view) {
+        Intent editPlantIntent = new Intent(PlantDetailsActivity.this, PlantFormActivity.class);
+        editPlantIntent.putExtra(FINAL_PLANT_ID, id);
+        startActivity(editPlantIntent);
+        finish();
+    }
 
     public void deletePlantClick (View view) {
         showDeleteConfirmationDialog();
