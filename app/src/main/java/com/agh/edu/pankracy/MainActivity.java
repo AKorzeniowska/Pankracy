@@ -22,4 +22,10 @@ public class MainActivity extends AppCompatActivity {
     public void openCalendarActivity(View view) {
 
     }
+
+    public void openWeatherTestActivity(View view) {
+        Intent plantIntent = new Intent(this, WeatherTestActivity.class);
+        startActivity(plantIntent);
+    }
+
 }
