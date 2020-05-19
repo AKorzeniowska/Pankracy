@@ -33,7 +33,6 @@ public class PlantListActivity extends AppCompatActivity {
         mDbHelper = new PlantDBHelper(this);
         listView = (ListView) findViewById(R.id.plants_listview);
 
-        addDummyData();
         listGetter();
         chosenPlantIntentCreator();
     }
@@ -74,26 +73,6 @@ public class PlantListActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
-    private void addDummyData(){
-        ContentValues values = new ContentValues();
-        values.put(PlantEntry.COLUMN_NAME, "testname1");
-        values.put(PlantEntry.COLUMN_SPECIES, "testspecies1");
-        values.put(PlantEntry.COLUMN_WATERING, 6);
-        values.put(PlantEntry.COLUMN_MIN_TEMP, 1);
-        values.put(PlantEntry.COLUMN_LAST_WATERING, "lastwatering1");
-
-        Uri newUri = getContentResolver().insert(PlantEntry.CONTENT_URI, values);
-
-        values = new ContentValues();
-        values.put(PlantEntry.COLUMN_NAME, "testname2");
-        values.put(PlantEntry.COLUMN_SPECIES, "testspecies2");
-        values.put(PlantEntry.COLUMN_WATERING, 7);
-        values.put(PlantEntry.COLUMN_MIN_TEMP, 2);
-        values.put(PlantEntry.COLUMN_LAST_WATERING, "lastwatering2");
-
-        newUri = getContentResolver().insert(PlantEntry.CONTENT_URI, values);
-    }
-
     private void chosenPlantIntentCreator(){
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -102,8 +81,13 @@ public class PlantListActivity extends AppCompatActivity {
                 Intent chosenPlantIntent = new Intent(PlantListActivity.this, PlantDetailsActivity.class);
                 chosenPlantIntent.putExtra(FINAL_PLANT_ID, idList.get(position));
                 startActivity(chosenPlantIntent);
-                finish();
             }
         });
+    }
+
+    public void openNewPlantForm(View view) {
+        Intent editPlantIntent = new Intent(PlantListActivity.this, PlantFormActivity.class);
+        editPlantIntent.putExtra(FINAL_PLANT_ID, 0);
+        startActivity(editPlantIntent);
     }
 }

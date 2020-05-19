@@ -93,7 +93,6 @@ public class PlantDetailsActivity extends AppCompatActivity {
         Intent editPlantIntent = new Intent(PlantDetailsActivity.this, PlantFormActivity.class);
         editPlantIntent.putExtra(FINAL_PLANT_ID, id);
         startActivity(editPlantIntent);
-        finish();
     }
 
     public void deletePlantClick (View view) {
