@@ -3,22 +3,24 @@ package com.agh.edu.pankracy.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.agh.edu.pankracy.data.weather.Weather;
+import com.agh.edu.pankracy.data.weather.WeatherCollection;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JSONUtils {
     private static final String LOG_TAG = JSONUtils.class.getSimpleName();
 
     /* Parameters names */
-    // TODO: Discuss which parameters we want for Pankracy
-    // Example: https://api.openweathermap.org/data/2.5/onecall?lang=pl&exclude=daily,minutely&units=metric&lat=49.817225&lon=19.222505&appid=57550cef4c674dce68c6ef7b557d4d90
     private final static String LABEL_WEATHER = "weather";
     private final static String LABEL_WEATHER_DESCRIPTION = "description";
 
     private final static String LABEL_TEMPERATURE = "temp";
-    private final static String LABEL_PRESSURE = "pressure";
-    private final static String LABEL_HUMIDITY = "humidity";
     private final static String LABEL_CLOUDS = "clouds";
     private final static String LABEL_WINDSPEED = "wind_speed";
 
@@ -28,38 +30,38 @@ public class JSONUtils {
     private final static String LABEL_CURRENT = "current";
     private final static String LABEL_HOURLY = "hourly";
     private final static String LABEL_DATETIME = "dt";
+    private final static String LABEL_TIMEZONE_OFFSET = "timezone_offset";
 
-    // Returns current weather as the first array element; hourly for the next elements
-    public static String[] parseToStrings(Context context, String jsonStr) throws JSONException {
-        String[] parsedWeatherData = null; // Result String array
+    private final static String LABEL_PRESSURE = "pressure";
+    private final static String LABEL_HUMIDITY = "humidity";
 
-        JSONObject forecastJson = new JSONObject(jsonStr);
-        JSONArray hourlyWeatherArray = forecastJson.getJSONArray(LABEL_HOURLY);
-        parsedWeatherData = new String[hourlyWeatherArray.length()+1];
-        parsedWeatherData[0] = parseWeather(forecastJson.getJSONObject(LABEL_CURRENT));
-        for(int i = 1; i < parsedWeatherData.length; ++i) {
-            parsedWeatherData[i] = parseWeather(hourlyWeatherArray.getJSONObject(i-1));
+    private static Weather parseMeasurement(JSONObject weatherJson) throws JSONException {
+        Weather weather = new Weather(
+                DateUtils.getDateFromMillis(weatherJson.getLong(LABEL_DATETIME)),
+                weatherJson.getJSONArray(LABEL_WEATHER).getJSONObject(0).getString(LABEL_WEATHER_DESCRIPTION),
+                weatherJson.getDouble(LABEL_TEMPERATURE),
+                weatherJson.getInt(LABEL_PRESSURE),
+                weatherJson.getInt(LABEL_HUMIDITY),
+                weatherJson.getInt(LABEL_CLOUDS),
+                weatherJson.getDouble(LABEL_WINDSPEED)
+        );
+        if (weatherJson.has(LABEL_RAIN)) {
+            weather.setRain(weatherJson.getJSONObject(LABEL_RAIN).getDouble(LABEL_RAIN_INFO));
         }
-
-        Log.v(LOG_TAG, "JSON weather data parsed to string array.");
-        return parsedWeatherData;
+        return weather;
     }
 
-    private static String parseWeather(JSONObject weatherJson)
-            throws JSONException {
-        String result = DateUtils.getFormattedDate(weatherJson.getLong(LABEL_DATETIME)) + '\n';
-        result += weatherJson.getJSONArray(LABEL_WEATHER)
-                .getJSONObject(0)
-                .getString(LABEL_WEATHER_DESCRIPTION)
-                .toUpperCase() + '\n';
-        result += "Temperature: " + weatherJson.getString(LABEL_TEMPERATURE) + "°C\n";
-        result += "Pressure: " + weatherJson.getInt(LABEL_PRESSURE) + " hPa\n";
-        result += "Humidity: " + weatherJson.getInt(LABEL_HUMIDITY) + "%\n";
-        result += "Cloudiness: " + weatherJson.getInt(LABEL_CLOUDS) + "%\n";
-        result += "Wind speed: " + weatherJson.getDouble(LABEL_WINDSPEED) + "m/s\n";
-        if(weatherJson.has(LABEL_RAIN)) {
-            result += "Rain in 1h: " + weatherJson.getJSONObject(LABEL_RAIN).getString(LABEL_RAIN_INFO);
+    public static WeatherCollection parseApiResponse(Context context, String jsonStr) throws JSONException {
+        JSONObject forecastJson = new JSONObject(jsonStr);
+        JSONArray hourlyWeatherArray = forecastJson.getJSONArray(LABEL_HOURLY);
+        DateUtils.TIMEZONE_OFFSET = forecastJson.getInt(LABEL_TIMEZONE_OFFSET);
+
+        Weather currentWeather = parseMeasurement(forecastJson.getJSONObject(LABEL_CURRENT));
+        List<Weather> resultHourlyWeather = new ArrayList<>();
+        for (int i = 0; i < hourlyWeatherArray.length(); ++i) {
+            resultHourlyWeather.add(parseMeasurement(hourlyWeatherArray.getJSONObject(i)));
         }
-        return result;
+        Log.v(LOG_TAG, "JSON weather data parsed to Weather objects.");
+        return new WeatherCollection(currentWeather, resultHourlyWeather);
     }
 }

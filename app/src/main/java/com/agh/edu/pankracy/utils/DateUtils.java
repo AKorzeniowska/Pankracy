@@ -2,10 +2,15 @@ package com.agh.edu.pankracy.utils;
 
 import java.util.Date;
 
-class DateUtils {
+public class DateUtils {
+    static final long HOUR = 3600;
+    public static int TIMEZONE_OFFSET = 0;
+
+    static Date getDateFromMillis(long dateInMillis){
+        return new java.util.Date((dateInMillis + TIMEZONE_OFFSET) * 1000);
+    }
+
     static String getFormattedDate(long dateInMillis){
-        // FIXME: Wrong date!
-        Date time = new java.util.Date((long)dateInMillis);
-        return time.toString();
+        return getDateFromMillis(dateInMillis).toString();
     }
 }
