@@ -33,6 +33,7 @@ public class NetworkUtils {
     private final static String UNITS_PARAM = "units";
     private final static String EXCLUDE_PARAM = "exclude";
 
+
     /**
      * Builds the URL to call the weather server using coordinates.
      *
@@ -51,9 +52,8 @@ public class NetworkUtils {
                 .appendQueryParameter(LAT_PARAM, String.valueOf(lat))
                 .build();
 
-        URL url = null;
         try {
-            url = new URL(builtUri.toString());
+            URL url = new URL(builtUri.toString());
             Log.v(LOG_TAG, "Built URI " + url);
             return url;
         } catch (MalformedURLException e) {
@@ -61,6 +61,7 @@ public class NetworkUtils {
             return null;
         }
     }
+
 
     /**
      * This method returns the result from HTTP response.
