@@ -51,6 +51,7 @@ public class PlantListActivity extends AppCompatActivity {
 
     private void listGetter(){
         listViewData.clear();
+        idList.clear();
         String [] projection = {PlantEntry._ID, PlantEntry.COLUMN_NAME, PlantEntry.COLUMN_SPECIES};
         Cursor cursor = getContentResolver().query(PlantEntry.CONTENT_URI, projection, null, null, null);
 

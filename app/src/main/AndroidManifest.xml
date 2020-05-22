@@ -40,6 +40,9 @@
             android:name=".data.PlantProvider"
             android:authorities="com.agh.edu.pankracy.plants"
             android:exported="false" />
+
+        <service android:name=".notifications.NotificationIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>
