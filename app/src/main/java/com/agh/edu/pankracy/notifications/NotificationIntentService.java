@@ -5,16 +5,11 @@ import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 
 import com.agh.edu.pankracy.data.PlantContract;
-import com.agh.edu.pankracy.data.PlantContract.PlantEntry;
 import com.agh.edu.pankracy.utils.DateUtils;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class NotificationIntentService extends IntentService {
     public static final String ACTION_CONFIRM = "already-watered";
@@ -44,9 +39,9 @@ public class NotificationIntentService extends IntentService {
         String today = DateUtils.sdf.format(new Date());
 
         ContentValues values = new ContentValues();
-        values.put(PlantEntry.COLUMN_LAST_WATERING, today);
+        values.put(PlantContract.COLUMN_LAST_WATERING, today);
 
-        getContentResolver().update(PlantEntry.CONTENT_URI_ID(id), values, null, null);
+        getContentResolver().update(PlantContract.CONTENT_URI_ID(id), values, null, null);
     }
 
     private static void clearAllNotifications (Context context){

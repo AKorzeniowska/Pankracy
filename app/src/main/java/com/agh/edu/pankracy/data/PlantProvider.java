@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-import com.agh.edu.pankracy.data.PlantContract.PlantEntry;
-
 public class PlantProvider extends ContentProvider {
     private PlantDBHelper mDbHelper;
     public static final String LOG_TAG = PlantProvider.class.getSimpleName();
@@ -19,8 +17,8 @@ public class PlantProvider extends ContentProvider {
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        uriMatcher.addURI(PlantEntry.CONTENT_AUTHORITY, PlantEntry.PATH_PLANTS, PLANTS);
-        uriMatcher.addURI(PlantEntry.CONTENT_AUTHORITY, PlantEntry.PATH_PLANTS + "/#", PLANT_ID);
+        uriMatcher.addURI(PlantContract.CONTENT_AUTHORITY, PlantContract.PATH_PLANTS, PLANTS);
+        uriMatcher.addURI(PlantContract.CONTENT_AUTHORITY, PlantContract.PATH_PLANTS + "/#", PLANT_ID);
     }
 
     @Override
@@ -37,12 +35,12 @@ public class PlantProvider extends ContentProvider {
 
         switch (match){
             case PLANTS:
-                cursor = database.query(PlantEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = database.query(PlantContract.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case PLANT_ID:
-                selection = PlantEntry._ID + "=?";
+                selection = PlantContract._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                cursor = database.query(PlantEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = database.query(PlantContract.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
                 throw new IllegalArgumentException("unknown URI: " + uri);
@@ -68,7 +66,7 @@ public class PlantProvider extends ContentProvider {
 
     private Uri insertPlant(Uri uri, ContentValues values){
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        long id = database.insert(PlantEntry.TABLE_NAME, null, values);
+        long id = database.insert(PlantContract.TABLE_NAME, null, values);
         if (id==-1){
             Log.e(LOG_TAG, "failed to insert to database for: " + uri);
             return null;
@@ -83,7 +81,7 @@ public class PlantProvider extends ContentProvider {
             case PLANTS:
                 return deletePlants(uri, selection, selectionArgs);
             case PLANT_ID:
-                selection = PlantEntry._ID + "=?";
+                selection = PlantContract._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return deletePlants(uri, selection, selectionArgs);
             default:
@@ -93,7 +91,7 @@ public class PlantProvider extends ContentProvider {
 
     private int deletePlants(Uri uri, String selection, String[] selectionArgs){
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        return database.delete(PlantEntry.TABLE_NAME, selection, selectionArgs);
+        return database.delete(PlantContract.TABLE_NAME, selection, selectionArgs);
     }
 
 
@@ -104,7 +102,7 @@ public class PlantProvider extends ContentProvider {
             case PLANTS:
                 return updatePlants(uri, values, selection, selectionArgs);
             case PLANT_ID:
-                selection = PlantEntry._ID + "=?";
+                selection = PlantContract._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updatePlants(uri, values, selection, selectionArgs);
             default:
@@ -116,11 +114,11 @@ public class PlantProvider extends ContentProvider {
         if (values.size() == 0)
             return 0;
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        return database.update(PlantEntry.TABLE_NAME, values, selection, selectionArgs);
+        return database.update(PlantContract.TABLE_NAME, values, selection, selectionArgs);
     }
 
     public void truncatePlantsTable(){
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        database.execSQL("DELETE FROM " + PlantEntry.TABLE_NAME + ";");
+        database.execSQL("DELETE FROM " + PlantContract.TABLE_NAME + ";");
     }
 }

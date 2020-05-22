@@ -4,30 +4,26 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.agh.edu.pankracy.data.PlantContract.PlantEntry;
 import com.agh.edu.pankracy.utils.DateUtils;
 
 public class PlantDBOperations {
     public static Map<Integer, String> getPlantsToWaterAtDate(Date date, Context context){
        Map<Integer, String> plantsToWater = new HashMap<>();
 
-        String[] projection = {PlantEntry._ID, PlantEntry.COLUMN_NAME, PlantEntry.COLUMN_SPECIES, PlantEntry.COLUMN_WATERING, PlantEntry.COLUMN_LAST_WATERING};
-        Cursor cursor = context.getContentResolver().query(PlantEntry.CONTENT_URI, projection, null, null, null);
+        String[] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_WATERING, PlantContract.COLUMN_LAST_WATERING};
+        Cursor cursor = context.getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
 
-        int idColumnIndex = cursor.getColumnIndex(PlantEntry._ID);
-        int nameColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_NAME);
-        int speciesColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_SPECIES);
-        int wateringColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_WATERING);
-        int lastWateringColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_LAST_WATERING);
+        int idColumnIndex = cursor.getColumnIndex(PlantContract._ID);
+        int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
+        int speciesColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_SPECIES);
+        int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
+        int lastWateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
 
         Integer id;
-        Integer nextWatering;
         String nameOrSpecies;
         Integer wateringFrequency;
         Date lastWatering = null;
@@ -52,5 +48,37 @@ public class PlantDBOperations {
         }
         cursor.close();
         return plantsToWater;
+    }
+
+    public static Map<Integer, String> getPlantsThatWouldGetCold(int temperature, Context context){
+        Map<Integer, String> plants = new HashMap<>();
+
+        String[] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_MIN_TEMP};
+        Cursor cursor = context.getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
+
+        int idColumnIndex = cursor.getColumnIndex(PlantContract._ID);
+        int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
+        int speciesColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_SPECIES);
+        int minTempColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
+
+        Integer id;
+        String nameOrSpecies;
+        Integer minTemp;
+
+        while (cursor.moveToNext()) {
+            id = cursor.getInt(idColumnIndex);
+            nameOrSpecies = cursor.getString(nameColumnIndex);
+
+            if (nameOrSpecies.equals("")) {
+                nameOrSpecies = cursor.getString(speciesColumnIndex);
+            }
+            minTemp = cursor.getInt(minTempColumnIndex);
+            if (minTemp > temperature){
+                plants.put(id, nameOrSpecies);
+            }
+
+        }
+        cursor.close();
+        return plants;
     }
 }
