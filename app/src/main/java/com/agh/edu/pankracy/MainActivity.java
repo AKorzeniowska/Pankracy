@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.agh.edu.pankracy.notifications.NotificationUtils;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -28,4 +30,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(plantIntent);
     }
 
+    public void issueNotification(View view) {
+        NotificationUtils.remindUserToWater(this);
+    }
 }

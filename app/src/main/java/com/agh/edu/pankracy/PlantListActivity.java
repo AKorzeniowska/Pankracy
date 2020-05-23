@@ -2,19 +2,16 @@ package com.agh.edu.pankracy;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.agh.edu.pankracy.data.PlantDBHelper;
-import com.agh.edu.pankracy.data.PlantContract.PlantEntry;
+import com.agh.edu.pankracy.data.PlantContract;
 
 import java.util.ArrayList;
 
@@ -51,12 +48,13 @@ public class PlantListActivity extends AppCompatActivity {
 
     private void listGetter(){
         listViewData.clear();
-        String [] projection = {PlantEntry._ID, PlantEntry.COLUMN_NAME, PlantEntry.COLUMN_SPECIES};
-        Cursor cursor = getContentResolver().query(PlantEntry.CONTENT_URI, projection, null, null, null);
+        idList.clear();
+        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES};
+        Cursor cursor = getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
 
-        int nameColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_NAME);
-        int speciesColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_SPECIES);
-        int idColumnIndex = cursor.getColumnIndex(PlantEntry._ID);
+        int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
+        int speciesColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_SPECIES);
+        int idColumnIndex = cursor.getColumnIndex(PlantContract._ID);
 
         while (cursor.moveToNext()){
             String currentName = cursor.getString(nameColumnIndex);
