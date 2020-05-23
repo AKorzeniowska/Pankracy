@@ -43,6 +43,9 @@
         app:layout_constraintTop_toBottomOf="@+id/species_edit" />
 
     <EditText
+        android:focusableInTouchMode="false"
+        android:clickable="true"
+        android:inputType="none"
         android:id="@+id/last_watering_edit"
         android:hint="Last watering (date)"
         android:layout_width="wrap_content"
@@ -90,5 +93,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/save_form_button"
         app:layout_constraintTop_toBottomOf="@+id/min_temp_edit" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

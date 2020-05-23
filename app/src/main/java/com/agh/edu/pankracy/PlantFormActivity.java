@@ -2,16 +2,23 @@ package com.agh.edu.pankracy;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agh.edu.pankracy.data.PlantContract;
 import com.agh.edu.pankracy.data.PlantDBHelper;
+
+import java.util.Calendar;
 
 public class PlantFormActivity extends AppCompatActivity {
     private static final String FINAL_PLANT_ID = "final_plant_id";
@@ -28,7 +35,9 @@ public class PlantFormActivity extends AppCompatActivity {
     EditText speciesText;
     EditText wateringText;
     EditText minTempText;
-    EditText lastWateringText;
+    TextView lastWateringText;
+
+    private DatePickerDialog.OnDateSetListener datePickerListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,8 @@ public class PlantFormActivity extends AppCompatActivity {
         wateringText = (EditText) findViewById(R.id.watering_edit);
         minTempText = (EditText) findViewById(R.id.min_temp_edit);
         lastWateringText = (EditText) findViewById(R.id.last_watering_edit);
+
+        setDatePickerOpener();
 
         if (id != 0) {
             dataGetter();
@@ -97,7 +108,7 @@ public class PlantFormActivity extends AppCompatActivity {
 
     public void save_form(View view) {
         String name = nameText.getText().toString();
-        String species = nameText.getText().toString();
+        String species = speciesText.getText().toString();
         String watering = wateringText.getText().toString();
         String minTemp = minTempText.getText().toString();
         String lastWatering = lastWateringText.getText().toString();
@@ -141,5 +152,39 @@ public class PlantFormActivity extends AppCompatActivity {
 
     public void cancel_form(View view) {
         finish();
+    }
+
+    public void setDatePickerOpener() {
+        datePickerListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String monthText = month+"";
+                if (month < 10)
+                    monthText = "0" + monthText;
+                lastWateringText.setText(dayOfMonth + "." + monthText + "." + year);
+            }
+        };
+
+        lastWateringText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        PlantFormActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        datePickerListener,
+                        year, month, day);
+
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+
     }
 }
