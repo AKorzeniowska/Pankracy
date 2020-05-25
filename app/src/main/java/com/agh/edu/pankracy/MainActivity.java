@@ -1,12 +1,11 @@
 package com.agh.edu.pankracy;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.agh.edu.pankracy.notifications.NotificationUtils;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openCalendarActivity(View view) {
-
+        Intent calendarIntent = new Intent(this, CalendarActivity.class);
+        startActivity(calendarIntent);
     }
 
     public void openWeatherTestActivity(View view) {
