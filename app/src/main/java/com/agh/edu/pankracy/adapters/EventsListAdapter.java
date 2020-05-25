@@ -54,7 +54,7 @@ public class EventsListAdapter extends BaseAdapter {
 //                convertView.findViewById(R.id.text_view_item_description);
 
         //sets the text for item name and item description from the current item object
-        textViewItemName.setText(currentItem.toString());
+        textViewItemName.setText((String)currentItem.getData());
 //        textViewItemDescription.setText(currentItem.getItemDescription());
 
         // returns the view for the current row
