@@ -24,10 +24,7 @@ public class DateUtils {
     }
 
     public static long getNumberOfDaysBetweenGivenDateAndNextWateringMyGodThatsALongAssMethodName(Date givenDate, Date lastWatering, int wateringFrequency){
-        Calendar c = Calendar.getInstance();
-        c.setTime(lastWatering);
-        c.add(Calendar.DATE, wateringFrequency);
-        Date nextWatering = c.getTime();
+        Date nextWatering = getNextWateringDate(lastWatering, wateringFrequency);
         long days = ChronoUnit.DAYS.between(parseDateToLocalDateTime(givenDate), parseDateToLocalDateTime(nextWatering));
         return days;
     }
@@ -36,5 +33,12 @@ public class DateUtils {
         return date.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
+    }
+
+    public static Date getNextWateringDate(Date lastWatering, int wateringFrequency){
+        Calendar c = Calendar.getInstance();
+        c.setTime(lastWatering);
+        c.add(Calendar.DATE, wateringFrequency);
+        return c.getTime();
     }
 }

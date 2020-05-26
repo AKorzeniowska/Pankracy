@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.agh.edu.pankracy.R;
+import com.agh.edu.pankracy.models.CalendarEvent;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class EventsListAdapter extends BaseAdapter {
 //                convertView.findViewById(R.id.text_view_item_description);
 
         //sets the text for item name and item description from the current item object
-        textViewItemName.setText((String)currentItem.getData());
+        textViewItemName.setText(((CalendarEvent)currentItem.getData()).getMessage());
 //        textViewItemDescription.setText(currentItem.getItemDescription());
 
         // returns the view for the current row

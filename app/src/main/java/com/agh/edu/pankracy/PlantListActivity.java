@@ -16,7 +16,6 @@ import com.agh.edu.pankracy.data.PlantContract;
 import java.util.ArrayList;
 
 public class PlantListActivity extends AppCompatActivity {
-    private PlantDBHelper mDbHelper;
     private ArrayList<String> listViewData = new ArrayList<>();
     private ArrayList<Integer> idList = new ArrayList<>();
     private final static String FINAL_PLANT_ID = "final_plant_id";
@@ -26,8 +25,6 @@ public class PlantListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plant_list);
-
-        mDbHelper = new PlantDBHelper(this);
         listView = (ListView) findViewById(R.id.plants_listview);
 
         listGetter();
