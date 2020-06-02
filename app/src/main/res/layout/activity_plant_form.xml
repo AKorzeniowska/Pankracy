@@ -5,7 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PlantFormActivity">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/ToolBarStyle"
+        android:id="@+id/my_toolbar" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_new_plant"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/courgette"
+            android:textSize="20sp"
+            android:id="@+id/toolbar_title"/>
 
+    </androidx.appcompat.widget.Toolbar>
+</LinearLayout>
     <EditText
         android:id="@+id/name_edit"
         android:hint="Name"

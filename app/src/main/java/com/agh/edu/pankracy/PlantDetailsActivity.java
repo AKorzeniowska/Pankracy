@@ -2,12 +2,16 @@ package com.agh.edu.pankracy;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +19,8 @@ import android.widget.Toast;
 import com.agh.edu.pankracy.data.PlantContract;
 import com.agh.edu.pankracy.data.PlantContract.PlantEntry;
 import com.agh.edu.pankracy.data.PlantDBHelper;
+
+import org.w3c.dom.Text;
 
 public class PlantDetailsActivity extends AppCompatActivity {
 
@@ -36,6 +42,37 @@ public class PlantDetailsActivity extends AppCompatActivity {
         id = getIntent().getIntExtra(FINAL_PLANT_ID, 0);
         dataGetter();
         dataSetter();
+
+        // Toolbar
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(name);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.plantdetails_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.plantdetails_edit:
+                editPlant();
+                return true;
+            case R.id.plantdetails_delete:
+                deletePlantClick();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -89,13 +126,13 @@ public class PlantDetailsActivity extends AppCompatActivity {
         minTempText.setText(minTemperature.toString());
     }
 
-    public void editPlant (View view) {
+    public void editPlant () {
         Intent editPlantIntent = new Intent(PlantDetailsActivity.this, PlantFormActivity.class);
         editPlantIntent.putExtra(FINAL_PLANT_ID, id);
         startActivity(editPlantIntent);
     }
 
-    public void deletePlantClick (View view) {
+    public void deletePlantClick () {
         showDeleteConfirmationDialog();
     }
 

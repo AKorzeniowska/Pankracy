@@ -8,4 +8,14 @@
     <string name="title_activity_weather_test">WeatherTestActivity</string>
     <string name="weather_test_text">Weather…</string>
     <string name="action_settings">Test</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="plants_list">Plants list</string>
+    <string name="weather">Weather</string>
+    <string name="calendar">Calendar</string>
+    <string name="add_new_plant">Add a new plant</string>
+    <string name="edit_the_plant">Edit the plant</string>
+    <string name="delete_the_plant">Delete the plant</string>
 </resources>

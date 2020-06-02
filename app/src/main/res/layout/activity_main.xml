@@ -5,46 +5,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/ToolBarStyle"
+        android:id="@+id/my_toolbar" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/courgette"
+            android:textSize="20sp"
+            android:layout_marginStart="25dp"
+            android:id="@+id/toolbar_title"/>
 
-    <Button
-        android:id="@+id/main_list_button"
-        android:layout_width="151dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="428dp"
-        android:layout_marginEnd="43dp"
-        android:onClick="openListActivity"
-        android:text="@string/plant_list_button"
-        app:layout_constraintEnd_toStartOf="@+id/main_calendar_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.appcompat.widget.Toolbar>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/container">
 
-    <Button
-        android:id="@+id/main_calendar_button"
-        android:layout_width="129dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="428dp"
-        android:layout_marginEnd="40dp"
-        android:onClick="openCalendarActivity"
-        android:text="@string/calendar_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/main_list_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="160dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        android:onClick="openWeatherTestActivity"
-        android:text="@string/test_weather_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_list_button"
-        app:layout_constraintVertical_bias="0.0" />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="@drawable/bottom_nav_icon_color_selector"
+            app:itemIconSize="30dp"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/bottom_nav"/>
+    </FrameLayout>
+</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
