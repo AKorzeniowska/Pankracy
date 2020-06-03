@@ -4,5 +4,7 @@
     <item
         android:id="@+id/plantlist_add"
         android:title="@string/add_new_plant"
+        android:icon="@drawable/ic_add_black_24dp"
+        app:showAsAction="always"
         />
 </menu>

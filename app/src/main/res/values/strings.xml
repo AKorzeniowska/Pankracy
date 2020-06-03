@@ -19,4 +19,11 @@
     <string name="add_new_plant">Add a new plant</string>
     <string name="edit_the_plant">Edit the plant</string>
     <string name="delete_the_plant">Delete the plant</string>
+
+    <!-- Form -->
+    <string name="plant_name">Name</string>
+    <string name="plant_species">Species</string>
+    <string name="plant_watering_freq">Watering frequency (days)</string>
+    <string name="plant_last_watering">Last watering (date)</string>
+    <string name="plant_temp">Minimal temperature</string>
 </resources>

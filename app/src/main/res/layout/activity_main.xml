@@ -24,7 +24,6 @@
             android:text="@string/app_name"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
-
     </androidx.appcompat.widget.Toolbar>
         <FrameLayout
             android:layout_width="0dp"
