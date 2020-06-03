@@ -64,9 +64,6 @@ public class ListOfPlantsFragment extends Fragment {
         setHasOptionsMenu(true);
         listView = view.findViewById(R.id.plants_list);
 
-        adapter = new PlantListAdapter(getActivity(), listViewData);
-        listView.setAdapter(adapter);
-
         listGetter();
         chosenPlantIntentCreator();
         return view;
@@ -107,6 +104,9 @@ public class ListOfPlantsFragment extends Fragment {
         }
         cursor.close();
 
+        adapter = new PlantListAdapter(getActivity(), listViewData);
+        listView.setAdapter(adapter);
+
         adapter.notifyDataSetChanged();
     }
 
@@ -114,8 +114,9 @@ public class ListOfPlantsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                long idx = adapter.getItemId(position);
                 Intent chosenPlantIntent = new Intent(getActivity(), PlantDetailsActivity.class);
-                chosenPlantIntent.putExtra(FINAL_PLANT_ID, idList.get(position));
+                chosenPlantIntent.putExtra(FINAL_PLANT_ID, (int) idx);
                 startActivityForResult(chosenPlantIntent, 10001);
             }
         });
@@ -134,8 +135,7 @@ public class ListOfPlantsFragment extends Fragment {
         if (requestCode == 10001) {
             if(resultCode == Activity.RESULT_OK) {
                 Log.v(LOG_TAG, "Result OK");
-                adapter.notifyDataSetChanged();
-                listView.setAdapter(adapter);
+                listGetter();
                 chosenPlantIntentCreator();
             }
         }

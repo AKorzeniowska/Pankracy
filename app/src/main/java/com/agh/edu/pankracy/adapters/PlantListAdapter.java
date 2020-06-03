@@ -42,8 +42,8 @@ public class PlantListAdapter extends BaseAdapter {
     }
 
     @Override
-    public long getItemId(int arg0) {
-        return arg0;
+    public long getItemId(int position) {
+        return mKeys[position];
     }
 
     @Override
