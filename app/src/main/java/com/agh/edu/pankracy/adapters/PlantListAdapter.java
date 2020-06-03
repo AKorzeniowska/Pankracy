@@ -10,16 +10,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.agh.edu.pankracy.R;
+
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class PlantListAdapter extends BaseAdapter {
-    Context context;
-    List<String> plants;
 
-    public PlantListAdapter(Context context, List<String> items) {
+    private Context context;
+    private LinkedHashMap<Integer, String> mData;
+    private Integer[] mKeys;
+
+    public PlantListAdapter(Context context, LinkedHashMap<Integer, String> items) {
         this.context = context;
-        this.plants = items;
+        this.mData = items;
+        mKeys = mData.keySet().toArray(new Integer[items.size()]);
     }
+
     private class ViewHolder {
         ImageView icon;
         TextView title;
@@ -27,17 +33,17 @@ public class PlantListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return plants.size();
+        return mData.size();
     }
 
     @Override
     public String getItem(int position) {
-        return plants.get(position);
+        return mData.get(mKeys[position]);
     }
 
     @Override
-    public long getItemId(int position) {
-        return plants.indexOf(getItem(position));
+    public long getItemId(int arg0) {
+        return arg0;
     }
 
     @Override

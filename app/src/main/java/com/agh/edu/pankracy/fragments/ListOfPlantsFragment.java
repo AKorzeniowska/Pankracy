@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.agh.edu.pankracy.PlantDetailsActivity;
@@ -27,6 +25,7 @@ import com.agh.edu.pankracy.data.PlantContract;
 import com.agh.edu.pankracy.data.PlantDBHelper;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,7 +36,7 @@ public class ListOfPlantsFragment extends Fragment {
     private static final String LOG_TAG = ListOfPlantsFragment.class.getSimpleName();
 
     private PlantDBHelper mDbHelper;
-    private ArrayList<String> listViewData = new ArrayList<>();
+    private LinkedHashMap<Integer, String> listViewData = new LinkedHashMap<>();
     private ArrayList<Integer> idList = new ArrayList<>();
     private final static String FINAL_PLANT_ID = "final_plant_id";
     private ListView listView;
@@ -64,6 +63,10 @@ public class ListOfPlantsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list_of_plants, container, false);
         setHasOptionsMenu(true);
         listView = view.findViewById(R.id.plants_list);
+
+        adapter = new PlantListAdapter(getActivity(), listViewData);
+        listView.setAdapter(adapter);
+
         listGetter();
         chosenPlantIntentCreator();
         return view;
@@ -100,16 +103,14 @@ public class ListOfPlantsFragment extends Fragment {
             if (currentName.equals("")){
                 currentName = cursor.getString(speciesColumnIndex);
             }
-            listViewData.add(currentName);
-            idList.add(currentId);
-        }        cursor.close();
-        adapter = new PlantListAdapter(getActivity(), listViewData);
+            listViewData.put(currentId, currentName);
+        }
+        cursor.close();
+
         adapter.notifyDataSetChanged();
-        listView.setAdapter(adapter);
     }
 
     private void chosenPlantIntentCreator() {
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
