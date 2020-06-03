@@ -1,10 +1,12 @@
 package com.agh.edu.pankracy.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +41,7 @@ public class ListOfPlantsFragment extends Fragment {
     private ArrayList<Integer> idList = new ArrayList<>();
     private final static String FINAL_PLANT_ID = "final_plant_id";
     private ListView listView;
+    PlantListAdapter adapter;
 
     public ListOfPlantsFragment() {
         // Required empty public constructor
@@ -63,7 +66,6 @@ public class ListOfPlantsFragment extends Fragment {
         listView = view.findViewById(R.id.plants_list);
         listGetter();
         chosenPlantIntentCreator();
-        // Inflate the layout for this fragment
         return view;
     }
 
@@ -101,7 +103,7 @@ public class ListOfPlantsFragment extends Fragment {
             listViewData.add(currentName);
             idList.add(currentId);
         }        cursor.close();
-        PlantListAdapter adapter = new PlantListAdapter(getActivity(), listViewData);
+        adapter = new PlantListAdapter(getActivity(), listViewData);
         adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
     }
@@ -113,14 +115,28 @@ public class ListOfPlantsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent chosenPlantIntent = new Intent(getActivity(), PlantDetailsActivity.class);
                 chosenPlantIntent.putExtra(FINAL_PLANT_ID, idList.get(position));
-                startActivity(chosenPlantIntent);
+                startActivityForResult(chosenPlantIntent, 10001);
             }
         });
     }
 
-    public void openNewPlantForm() {
+    private void openNewPlantForm() {
         Intent editPlantIntent = new Intent(getActivity(), PlantFormActivity.class);
         editPlantIntent.putExtra(FINAL_PLANT_ID, 0);
-        startActivity(editPlantIntent);
+        startActivityForResult(editPlantIntent, 10001);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10001) {
+            if(resultCode == Activity.RESULT_OK) {
+                Log.v(LOG_TAG, "Result OK");
+                adapter.notifyDataSetChanged();
+                listView.setAdapter(adapter);
+                chosenPlantIntentCreator();
+            }
+        }
     }
 }

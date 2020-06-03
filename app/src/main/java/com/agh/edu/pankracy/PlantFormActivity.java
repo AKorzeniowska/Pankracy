@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -62,6 +63,7 @@ public class PlantFormActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
+            setResult(Activity.RESULT_CANCELED);
             finish();
             return true;
         }
@@ -137,6 +139,7 @@ public class PlantFormActivity extends AppCompatActivity {
                 Toast.makeText(this, "Adding plant failed", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Plant has been added successfully", Toast.LENGTH_SHORT).show();
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         }
@@ -148,12 +151,14 @@ public class PlantFormActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(this, "Plant has been updated successfully", Toast.LENGTH_SHORT).show();
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         }
     }
 
     public void cancel_form(View view) {
+        setResult(Activity.RESULT_CANCELED);
         finish();
     }
 }

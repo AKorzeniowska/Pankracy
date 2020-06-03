@@ -1,9 +1,11 @@
 package com.agh.edu.pankracy;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -62,6 +64,7 @@ public class PlantDetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                setResult(Activity.RESULT_CANCELED);
                 finish();
                 return true;
             case R.id.plantdetails_edit:
@@ -129,7 +132,7 @@ public class PlantDetailsActivity extends AppCompatActivity {
     public void editPlant () {
         Intent editPlantIntent = new Intent(PlantDetailsActivity.this, PlantFormActivity.class);
         editPlantIntent.putExtra(FINAL_PLANT_ID, id);
-        startActivity(editPlantIntent);
+        startActivityForResult(editPlantIntent, 10002);
     }
 
     public void deletePlantClick () {
@@ -144,8 +147,7 @@ public class PlantDetailsActivity extends AppCompatActivity {
         else{
             Toast.makeText(this, "Plant has been deleted successfully", Toast.LENGTH_SHORT).show();
         }
-        Intent plantListIntent = new Intent(PlantDetailsActivity.this, PlantListActivity.class);
-        startActivity(plantListIntent);
+        setResult(Activity.RESULT_OK);
         finish();
     }
 
@@ -169,5 +171,17 @@ public class PlantDetailsActivity extends AppCompatActivity {
 
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)     {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10002) {
+            setResult(resultCode);
+            if(resultCode == Activity.RESULT_OK)
+                finish();
+        }
     }
 }
