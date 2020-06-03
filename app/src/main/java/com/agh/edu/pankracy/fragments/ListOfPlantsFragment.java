@@ -114,9 +114,8 @@ public class ListOfPlantsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                long idx = adapter.getItemId(position);
                 Intent chosenPlantIntent = new Intent(getActivity(), PlantDetailsActivity.class);
-                chosenPlantIntent.putExtra(FINAL_PLANT_ID, (int) idx);
+                chosenPlantIntent.putExtra(FINAL_PLANT_ID, (int) adapter.getItemId(position));
                 startActivityForResult(chosenPlantIntent, 10001);
             }
         });

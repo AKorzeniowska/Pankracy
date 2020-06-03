@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agh.edu.pankracy.data.PlantContract;
@@ -49,14 +50,17 @@ public class PlantFormActivity extends AppCompatActivity {
         minTempText = (EditText) findViewById(R.id.min_temp_edit);
         lastWateringText = (EditText) findViewById(R.id.last_watering_edit);
 
-        if (id != 0) {
-            dataGetter();
-            dataSetter();
-        }
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (id != 0) {
+            dataGetter();
+            dataSetter();
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
+            title.setText(R.string.edit_the_plant);
+        }
     }
 
     @Override
