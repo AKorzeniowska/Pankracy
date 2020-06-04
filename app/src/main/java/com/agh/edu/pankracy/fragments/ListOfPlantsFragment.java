@@ -47,8 +47,7 @@ public class ListOfPlantsFragment extends Fragment {
     }
 
     public static ListOfPlantsFragment newInstance() {
-        ListOfPlantsFragment fragment = new ListOfPlantsFragment();
-        return fragment;
+        return new ListOfPlantsFragment();
     }
 
     @Override

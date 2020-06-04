@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                             openFragment(ListOfPlantsFragment.newInstance());
                             return true;
                         case R.id.nav_weather:
-                            openFragment(WeatherFragment.newInstance("", ""));
+                            openFragment(WeatherFragment.newInstance());
                             return true;
                         case R.id.nav_calendar:
                             openFragment(CalendarFragment.newInstance("", ""));

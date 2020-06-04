@@ -86,7 +86,7 @@ public class WeatherTestActivity extends AppCompatActivity {
             );
             try {
                 String jsonWeatherResponse = NetworkUtils.getResponseFromHttpUrl(url);
-                return JSONUtils.parseApiResponse(WeatherTestActivity.this, jsonWeatherResponse);
+                return JSONUtils.parseApiResponse(jsonWeatherResponse);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -102,7 +102,6 @@ public class WeatherTestActivity extends AppCompatActivity {
     }
 
     // -- Getting Location --
-
     private void assignLocation(double latitude, double longitude) {
         Log.v(LOG_TAG, "Latitude: " + latitude);
         Log.v(LOG_TAG, "Longitude: " + longitude);

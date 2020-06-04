@@ -24,6 +24,8 @@ public class JSONUtils {
     private final static String LABEL_CLOUDS = "clouds";
     private final static String LABEL_WINDSPEED = "wind_speed";
 
+    private final static String LABEL_ICON = "icon";
+
     private final static String LABEL_RAIN = "rain";
     private final static String LABEL_RAIN_INFO = "1h";
 
@@ -36,22 +38,26 @@ public class JSONUtils {
     private final static String LABEL_HUMIDITY = "humidity";
 
     private static Weather parseMeasurement(JSONObject weatherJson) throws JSONException {
+        JSONObject weatherObject = weatherJson.getJSONArray(LABEL_WEATHER).getJSONObject(0);
         Weather weather = new Weather(
                 DateUtils.getDateFromMillis(weatherJson.getLong(LABEL_DATETIME)),
-                weatherJson.getJSONArray(LABEL_WEATHER).getJSONObject(0).getString(LABEL_WEATHER_DESCRIPTION),
+                weatherObject.getString(LABEL_WEATHER_DESCRIPTION),
                 weatherJson.getDouble(LABEL_TEMPERATURE),
                 weatherJson.getInt(LABEL_PRESSURE),
                 weatherJson.getInt(LABEL_HUMIDITY),
                 weatherJson.getInt(LABEL_CLOUDS),
-                weatherJson.getDouble(LABEL_WINDSPEED)
+                weatherJson.getDouble(LABEL_WINDSPEED),
+                weatherObject.getString(LABEL_ICON)
         );
         if (weatherJson.has(LABEL_RAIN)) {
-            weather.setRain(weatherJson.getJSONObject(LABEL_RAIN).getDouble(LABEL_RAIN_INFO));
+            JSONObject rain = weatherJson.getJSONObject(LABEL_RAIN);
+            if(!rain.toString().equals("{}"))
+                weather.setRain(rain.getDouble(LABEL_RAIN_INFO));
         }
         return weather;
     }
 
-    public static WeatherCollection parseApiResponse(Context context, String jsonStr) throws JSONException {
+    public static WeatherCollection parseApiResponse(String jsonStr) throws JSONException {
         JSONObject forecastJson = new JSONObject(jsonStr);
         JSONArray hourlyWeatherArray = forecastJson.getJSONArray(LABEL_HOURLY);
         DateUtils.TIMEZONE_OFFSET = forecastJson.getInt(LABEL_TIMEZONE_OFFSET);
