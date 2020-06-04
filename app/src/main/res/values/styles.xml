@@ -8,7 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
+        <item name="android:fontFamily">@font/lato</item>
+        <item name="fontFamily">@font/lato</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -26,5 +27,9 @@
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:tint">@android:color/white</item>
+    </style>
+    <style name="AppNameStyle">
+        <item name="android:fontFamily">@font/courgette</item>
+        <item name="fontFamily">@font/courgette</item>
     </style>
 </resources>

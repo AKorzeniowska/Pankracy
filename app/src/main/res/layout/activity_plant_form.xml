@@ -19,7 +19,7 @@
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/courgette"
+            app:theme="@style/AppNameStyle"
             android:text="@string/add_new_plant"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
