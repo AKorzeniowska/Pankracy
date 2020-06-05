@@ -20,10 +20,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agh.edu.pankracy.R;
+import com.agh.edu.pankracy.data.weather.Weather;
 import com.agh.edu.pankracy.data.weather.WeatherCollection;
 import com.agh.edu.pankracy.utils.JSONUtils;
 import com.agh.edu.pankracy.utils.NetworkUtils;
@@ -77,12 +80,35 @@ public class WeatherFragment extends Fragment {
     }
 
     private void displayEmptyContent() {
-
+        // TODO: Switch visibility
     }
 
-    private void displayWeather() {
+    private void displayWeather(WeatherCollection weatherCollection) {
+        // TODO: Switch visibility
 
+        Weather currentWeather = weatherCollection.getCurrentWeather();
+
+        ImageView mainWeatherIcon = getView().findViewById(R.id.current_weather_icon);
+        Context context = mainWeatherIcon.getContext();
+        int iconId = context.getResources().getIdentifier(
+                "weather_icon_" + currentWeather.getIcon(),
+                "drawable",
+                context.getPackageName()
+        );
+        mainWeatherIcon.setImageResource(iconId);
+
+        setTextValue(R.id.current_weather_temperature, currentWeather.getTemperature() + "°C");
+        setTextValue(R.id.current_weather_humidity, currentWeather.getHumidity() + "%");
+        setTextValue(R.id.current_weather_wind, currentWeather.getWindSpeed() + "km/h");
+        setTextValue(R.id.current_weather_rain, currentWeather.getRain() + "mm");
+        setTextValue(R.id.current_weather_description, currentWeather.getDescription().toUpperCase());
     }
+
+    private void setTextValue(int viewId, String value) {
+        TextView textView = getView().findViewById(viewId);
+        textView.setText(value);
+    }
+
 
     // -- Weather API Implementation --
     private void loadWeatherData() {
@@ -116,7 +142,7 @@ public class WeatherFragment extends Fragment {
                 displayEmptyContent();
             }
             else {
-                displayWeather();
+                displayWeather(weatherCollection);
             }
         }
     }

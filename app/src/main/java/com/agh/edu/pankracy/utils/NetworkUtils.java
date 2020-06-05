@@ -19,7 +19,7 @@ public class NetworkUtils {
 
     /* Parameters values */
     private final static String API_KEY = "57550cef4c674dce68c6ef7b557d4d90";
-    private final static String lang = "pl";
+    private final static String lang = "en";
     private static final String format = "json";
     private static final String units = "metric";
     private static final String excluded = "daily,minutely";

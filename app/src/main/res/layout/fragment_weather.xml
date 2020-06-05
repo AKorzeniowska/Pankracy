@@ -15,125 +15,128 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/test3"
+            app:layout_constraintEnd_toStartOf="@+id/current_weather_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/test1"
+                android:id="@+id/current_weather_description"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ZACHMURZENIE ITD ITD ITD"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/current_weather_temperature_icon"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ic_weather_thermometer"
-                app:layout_constraintBottom_toTopOf="@+id/test2a"
-                app:layout_constraintEnd_toStartOf="@+id/imageView3"
+                android:tint="@color/colorPrimaryDimmed"
+                app:layout_constraintBottom_toTopOf="@+id/current_weather_temperature"
+                app:layout_constraintEnd_toStartOf="@+id/current_weather_wind_icon"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/test1" />
+                app:layout_constraintTop_toBottomOf="@+id/current_weather_description" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/current_weather_wind_icon"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ic_weather_wind"
-                app:layout_constraintBottom_toTopOf="@+id/test2c"
-                app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                android:tint="@color/colorPrimaryDimmed"
+                app:layout_constraintBottom_toTopOf="@+id/current_weather_wind"
+                app:layout_constraintEnd_toStartOf="@+id/current_weather_humidity_icon"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/test1" />
+                app:layout_constraintStart_toEndOf="@+id/current_weather_temperature_icon"
+                app:layout_constraintTop_toBottomOf="@+id/current_weather_description" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/current_weather_humidity_icon"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ic_weather_humidity"
-                app:layout_constraintBottom_toTopOf="@+id/test2c2"
-                app:layout_constraintEnd_toStartOf="@+id/imageView5"
+                android:tint="@color/colorPrimaryDimmed"
+                app:layout_constraintBottom_toTopOf="@+id/current_weather_humidity"
+                app:layout_constraintEnd_toStartOf="@+id/current_weather_rain_icon"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/test1" />
+                app:layout_constraintStart_toEndOf="@+id/current_weather_wind_icon"
+                app:layout_constraintTop_toBottomOf="@+id/current_weather_description" />
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/current_weather_rain_icon"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ic_weather_rain"
-                app:layout_constraintBottom_toTopOf="@+id/test2b"
+                android:tint="@color/colorPrimaryDimmed"
+                app:layout_constraintBottom_toTopOf="@+id/current_weather_rain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView4"
-                app:layout_constraintTop_toBottomOf="@+id/test1" />
+                app:layout_constraintStart_toEndOf="@+id/current_weather_humidity_icon"
+                app:layout_constraintTop_toBottomOf="@+id/current_weather_description" />
 
             <TextView
-                android:id="@+id/test2a"
+                android:id="@+id/current_weather_temperature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="12"
+                android:textColor="@color/colorPrimaryDark"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/test2c"
+                app:layout_constraintEnd_toStartOf="@+id/current_weather_wind"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintTop_toBottomOf="@+id/current_weather_temperature_icon" />
 
             <TextView
-                android:id="@+id/test2c"
+                android:id="@+id/current_weather_wind"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="24"
+                android:textColor="@color/colorPrimaryDark"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/test2c2"
+                app:layout_constraintEnd_toStartOf="@+id/current_weather_humidity"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/test2a"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                app:layout_constraintStart_toEndOf="@+id/current_weather_temperature"
+                app:layout_constraintTop_toBottomOf="@+id/current_weather_wind_icon" />
 
             <TextView
-                android:id="@+id/test2c2"
+                android:id="@+id/current_weather_humidity"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="34"
+                android:textColor="@color/colorPrimaryDark"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/test2b"
+                app:layout_constraintEnd_toStartOf="@+id/current_weather_rain"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/test2c"
-                app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+                app:layout_constraintStart_toEndOf="@+id/current_weather_wind"
+                app:layout_constraintTop_toBottomOf="@+id/current_weather_humidity_icon" />
 
             <TextView
-                android:id="@+id/test2b"
+                android:id="@+id/current_weather_rain"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="25"
+                android:textColor="@color/colorPrimaryDark"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/test2c2"
-                app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+                app:layout_constraintStart_toEndOf="@+id/current_weather_humidity"
+                app:layout_constraintTop_toBottomOf="@+id/current_weather_rain_icon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/test3"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:id="@+id/current_weather_icon"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:gravity="center"
-            android:padding="40dp"
-            android:src="@drawable/ic_local_florist_black_24dp"
-            android:tint="#BDD2DD"
+            android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout"
