@@ -86,12 +86,12 @@ public class ListOfPlantsFragment extends Fragment {
 
     private void listGetter(){
         listViewData.clear();
-        String [] projection = {PlantContract.PlantEntry._ID, PlantContract.PlantEntry.COLUMN_NAME, PlantContract.PlantEntry.COLUMN_SPECIES};
-        Cursor cursor = getActivity().getContentResolver().query(PlantContract.PlantEntry.CONTENT_URI, projection, null, null, null);
+        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES};
+        Cursor cursor = getActivity().getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
 
-        int nameColumnIndex = cursor.getColumnIndex(PlantContract.PlantEntry.COLUMN_NAME);
-        int speciesColumnIndex = cursor.getColumnIndex(PlantContract.PlantEntry.COLUMN_SPECIES);
-        int idColumnIndex = cursor.getColumnIndex(PlantContract.PlantEntry._ID);
+        int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
+        int speciesColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_SPECIES);
+        int idColumnIndex = cursor.getColumnIndex(PlantContract._ID);
 
         while (cursor.moveToNext()){
             String currentName = cursor.getString(nameColumnIndex);
