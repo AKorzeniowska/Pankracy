@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/nav_list"
+        android:icon="@drawable/ic_local_florist_black_24dp"
+        android:title="@string/plants_list" />
+    <item
+        android:id="@+id/nav_weather"
+        android:icon="@drawable/ic_wb_sunny_black_24dp"
+        android:title="@string/weather" />
+    <item
+        android:id="@+id/nav_calendar"
+        android:icon="@drawable/ic_today_black_24dp"
+        android:title="@string/calendar" />
+</menu>

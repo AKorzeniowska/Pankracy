@@ -8,4 +8,34 @@
     <string name="title_activity_weather_test">WeatherTestActivity</string>
     <string name="weather_test_text">Weather…</string>
     <string name="action_settings">Test</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="home">Home</string>
+    <string name="plants_list">Plants list</string>
+    <string name="weather">Weather</string>
+    <string name="calendar">Calendar</string>
+    <string name="add_new_plant">Add a new plant</string>
+    <string name="edit_the_plant">Edit the plant</string>
+    <string name="delete_the_plant">Delete the plant</string>
+
+    <!-- Form -->
+    <string name="plant_name">Name</string>
+    <string name="plant_species">Species</string>
+    <string name="plant_watering_freq">Watering frequency (days)</string>
+    <string name="plant_last_watering">Last watering (date)</string>
+    <string name="plant_temp">Minimal temperature</string>
+
+
+    <!-- Weather -->
+    <string name="current_weather_icon">Current Weather Icon</string>
+    <string name="temperature_icon">Temperature icon</string>
+    <string name="wind_icon">Wind icon</string>
+    <string name="humidity_icon">Humidity icon</string>
+    <string name="rain_icon">Rain icon</string>
+    <string name="location_off">Your location is off. Turn it on and try again!</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="do_you_really_want_to_delete_this_plant">Do you really want to delete this plant?</string>
+    <string name="refresh_location">Refresh location</string>
 </resources>

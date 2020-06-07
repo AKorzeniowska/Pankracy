@@ -6,19 +6,20 @@
     <TextView
         android:id="@+id/dialog_title"
         android:gravity="center"
-        android:text="Uwaga"
+        android:text="@string/are_you_sure"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:scaleType="center"
+        android:textStyle="bold"
         android:contentDescription="@string/app_name" />
     <TextView
         android:id="@+id/dialog_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="3dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:gravity="center"
-        android:text="Czy usunąć roślinkę?" />
+        android:text="@string/do_you_really_want_to_delete_this_plant" />
 </LinearLayout>

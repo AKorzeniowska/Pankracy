@@ -9,11 +9,13 @@ public class Weather {
     private int cloudiness;
     private double windSpeed;
     private double rain;
+    private String icon;
 
     private int pressure;
     private int humidity;
 
-    public Weather(Date date, String description, double temperature, int pressure, int humidity, int cloudiness, double windSpeed) {
+    public Weather(Date date, String description, double temperature, int pressure, int humidity,
+                   int cloudiness, double windSpeed, String icon) {
         this.date = date;
         this.description = description;
         this.temperature = temperature;
@@ -21,10 +23,12 @@ public class Weather {
         this.humidity = humidity;
         this.cloudiness = cloudiness;
         this.windSpeed = windSpeed;
+        this.icon = icon;
     }
 
-    public Weather(Date date, String description, double temperature, int pressure, int humidity, int cloudiness, double windSpeed, double rain) {
-        this(date, description, temperature, pressure, humidity, cloudiness, windSpeed);
+    public Weather(Date date, String description, double temperature, int pressure, int humidity,
+                   int cloudiness, double windSpeed, String icon, double rain) {
+        this(date, description, temperature, pressure, humidity, cloudiness, windSpeed, icon);
         this.rain = rain;
     }
 
@@ -104,5 +108,13 @@ public class Weather {
                 ", pressure=" + pressure + " hPa" + '\n' +
                 ", humidity=" + humidity + "%" + '\n' +
                 '}';
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

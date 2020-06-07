@@ -1,7 +1,10 @@
 package com.agh.edu.pankracy;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -9,6 +12,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -46,18 +51,43 @@ public class PlantFormActivity extends AppCompatActivity {
         mDbHelper = new PlantDBHelper(this);
         id = getIntent().getIntExtra(FINAL_PLANT_ID, 0);
 
-        nameText = (EditText) findViewById(R.id.name_edit);
-        speciesText = (EditText) findViewById(R.id.species_edit);
-        wateringText = (EditText) findViewById(R.id.watering_edit);
-        minTempText = (EditText) findViewById(R.id.min_temp_edit);
-        lastWateringText = (EditText) findViewById(R.id.last_watering_edit);
+        nameText = findViewById(R.id.name_edit_text);
+        speciesText = findViewById(R.id.species_edit_text);
+        wateringText = findViewById(R.id.watering_edit_text);
+        minTempText = findViewById(R.id.min_temp_edit_text);
+        lastWateringText = findViewById(R.id.last_watering_edit_text);
+
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setDatePickerOpener();
 
         if (id != 0) {
             dataGetter();
             dataSetter();
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
+            title.setText(R.string.edit_the_plant);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.solo_confirm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            cancel_form();
+        }
+        else if(item.getItemId() == R.id.add) {
+            save_form();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -106,7 +136,7 @@ public class PlantFormActivity extends AppCompatActivity {
 
     }
 
-    public void save_form(View view) {
+    public void save_form() {
         String name = nameText.getText().toString();
         String species = speciesText.getText().toString();
         String watering = wateringText.getText().toString();
@@ -134,6 +164,7 @@ public class PlantFormActivity extends AppCompatActivity {
                 Toast.makeText(this, "Adding plant failed", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Plant has been added successfully", Toast.LENGTH_SHORT).show();
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         }
@@ -145,12 +176,14 @@ public class PlantFormActivity extends AppCompatActivity {
             }
             else{
                 Toast.makeText(this, "Plant has been updated successfully", Toast.LENGTH_SHORT).show();
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         }
     }
 
-    public void cancel_form(View view) {
+    public void cancel_form() {
+        setResult(Activity.RESULT_CANCELED);
         finish();
     }
 
