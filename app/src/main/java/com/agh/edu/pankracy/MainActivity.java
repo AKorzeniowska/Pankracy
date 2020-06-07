@@ -18,7 +18,6 @@ import com.agh.edu.pankracy.data.weather.WeatherCollection;
 import com.agh.edu.pankracy.fragments.CalendarFragment;
 import com.agh.edu.pankracy.fragments.HomeFragment;
 import com.agh.edu.pankracy.fragments.ListOfPlantsFragment;
-import com.agh.edu.pankracy.fragments.MyPlantRecyclerViewAdapter;
 import com.agh.edu.pankracy.fragments.WeatherFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -76,19 +75,5 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
             };
-
-    public void openListActivity(View view) {
-        Intent plantIntent = new Intent(this, PlantListActivity.class);
-        startActivity(plantIntent);
-    }
-
-    public void openCalendarActivity(View view) {
-
-    }
-
-    public void openWeatherTestActivity(View view) {
-        Intent plantIntent = new Intent(this, WeatherTestActivity.class);
-        startActivity(plantIntent);
-    }
 
 }

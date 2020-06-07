@@ -156,12 +156,12 @@ public class PlantDetailsActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.dialog_layout, null));
 
-        builder.setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 deletePlant();
             }
         });
-        builder.setNegativeButton("anuluj", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (dialog != null) {
                     dialog.dismiss();

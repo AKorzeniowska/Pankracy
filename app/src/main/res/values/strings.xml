@@ -35,4 +35,7 @@
     <string name="humidity_icon">Humidity icon</string>
     <string name="rain_icon">Rain icon</string>
     <string name="location_off">Your location is off. Turn it on and try again!</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="do_you_really_want_to_delete_this_plant">Do you really want to delete this plant?</string>
+    <string name="refresh_location">Refresh location</string>
 </resources>
