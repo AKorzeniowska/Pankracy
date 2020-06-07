@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agh.edu.pankracy.data.PlantContract;
-import com.agh.edu.pankracy.data.PlantContract.PlantEntry;
 import com.agh.edu.pankracy.data.PlantDBHelper;
 
 import org.w3c.dom.Text;
@@ -86,22 +85,22 @@ public class PlantDetailsActivity extends AppCompatActivity {
     }
 
     protected void dataGetter (){
-        String [] projection = {PlantEntry.COLUMN_NAME,
-                PlantEntry.COLUMN_SPECIES,
-                PlantEntry.COLUMN_WATERING,
-                PlantEntry.COLUMN_MIN_TEMP,
-                PlantEntry.COLUMN_LAST_WATERING
+        String [] projection = {PlantContract.COLUMN_NAME,
+                PlantContract.COLUMN_SPECIES,
+                PlantContract.COLUMN_WATERING,
+                PlantContract.COLUMN_MIN_TEMP,
+                PlantContract.COLUMN_LAST_WATERING
         };
-        String selection = PlantEntry._ID + "=?";
+        String selection = PlantContract._ID + "=?";
         String [] selectionArgs = {String.valueOf(id)};
 
-        Cursor cursor = getContentResolver().query(PlantEntry.CONTENT_URI_ID(id), projection, selection, selectionArgs, null);
+        Cursor cursor = getContentResolver().query(PlantContract.CONTENT_URI_ID(id), projection, selection, selectionArgs, null);
 
-        int nameColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_NAME);
-        int speciesColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_SPECIES);
-        int wateringColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_WATERING);
-        int minTempColumnIndex = cursor.getColumnIndex(PlantEntry.COLUMN_MIN_TEMP);
-        int lastWateringColumnIndex  = cursor.getColumnIndex(PlantEntry.COLUMN_LAST_WATERING);
+        int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
+        int speciesColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_SPECIES);
+        int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
+        int minTempColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
+        int lastWateringColumnIndex  = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
 
         while (cursor.moveToNext()){
             name = cursor.getString(nameColumnIndex);
@@ -140,7 +139,7 @@ public class PlantDetailsActivity extends AppCompatActivity {
     }
 
     private void deletePlant (){
-        int rows = getContentResolver().delete(PlantEntry.CONTENT_URI_ID(id), null, null);
+        int rows = getContentResolver().delete(PlantContract.CONTENT_URI_ID(id), null, null);
         if (rows == 0){
             Toast.makeText(this, "Deleting plant failed", Toast.LENGTH_SHORT).show();
         }
