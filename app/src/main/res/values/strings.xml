@@ -26,4 +26,13 @@
     <string name="plant_watering_freq">Watering frequency (days)</string>
     <string name="plant_last_watering">Last watering (date)</string>
     <string name="plant_temp">Minimal temperature</string>
+
+
+    <!-- Weather -->
+    <string name="current_weather_icon">Current Weather Icon</string>
+    <string name="temperature_icon">Temperature icon</string>
+    <string name="wind_icon">Wind icon</string>
+    <string name="humidity_icon">Humidity icon</string>
+    <string name="rain_icon">Rain icon</string>
+    <string name="location_off">Your location is off. Turn it on and try again!</string>
 </resources>

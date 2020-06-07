@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.agh.edu.pankracy.data.weather.WeatherCollection;
 import com.agh.edu.pankracy.fragments.CalendarFragment;
 import com.agh.edu.pankracy.fragments.HomeFragment;
 import com.agh.edu.pankracy.fragments.ListOfPlantsFragment;
@@ -23,6 +24,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    public static WeatherCollection WEATHER_COLLECTION = null;
 
     BottomNavigationView bottomNavigation;
     Toolbar appToolbar;

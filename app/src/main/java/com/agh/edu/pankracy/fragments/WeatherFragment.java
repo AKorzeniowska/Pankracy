@@ -2,6 +2,7 @@ package com.agh.edu.pankracy.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,7 +26,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agh.edu.pankracy.MainActivity;
 import com.agh.edu.pankracy.R;
+import com.agh.edu.pankracy.adapters.WeatherListAdapter;
 import com.agh.edu.pankracy.data.weather.Weather;
 import com.agh.edu.pankracy.data.weather.WeatherCollection;
 import com.agh.edu.pankracy.utils.JSONUtils;
@@ -50,9 +53,10 @@ public class WeatherFragment extends Fragment {
 
     private int PERMISSION_ID = 45;
     private FusedLocationProviderClient mFusedLocationClient;
-    private double LATITUDE;
-    private double LONGITUDE;
+    private Double LATITUDE = null;
+    private Double LONGITUDE = null;
 
+    WeatherListAdapter adapter;
     private ListView listView;
 
     public WeatherFragment() {
@@ -67,7 +71,6 @@ public class WeatherFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        loadWeatherData();
     }
 
     @Override
@@ -75,20 +78,27 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
+        listView = view.findViewById(R.id.weather_list);
+        loadWeatherData(view);
         //setHasOptionsMenu(true);
         return view;
     }
 
-    private void displayEmptyContent() {
-        // TODO: Switch visibility
+    private void displayEmptyContent(View view) {
+        listView.setVisibility(View.GONE);
+        view.findViewById(R.id.current_weather_wrapper).setVisibility(View.GONE);
+        view.findViewById(R.id.divider).setVisibility(View.GONE);
+        view.findViewById(R.id.no_location_wrapper).setVisibility(View.VISIBLE);
     }
 
-    private void displayWeather(WeatherCollection weatherCollection) {
-        // TODO: Switch visibility
+    private void displayWeather(WeatherCollection weatherCollection, View view) {
+        listView.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.no_location_wrapper).setVisibility(View.GONE);
+        view.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.current_weather_wrapper).setVisibility(View.VISIBLE);
 
         Weather currentWeather = weatherCollection.getCurrentWeather();
-
-        ImageView mainWeatherIcon = getView().findViewById(R.id.current_weather_icon);
+        ImageView mainWeatherIcon = view.findViewById(R.id.current_weather_icon);
         Context context = mainWeatherIcon.getContext();
         int iconId = context.getResources().getIdentifier(
                 "weather_icon_" + currentWeather.getIcon(),
@@ -97,23 +107,32 @@ public class WeatherFragment extends Fragment {
         );
         mainWeatherIcon.setImageResource(iconId);
 
-        setTextValue(R.id.current_weather_temperature, currentWeather.getTemperature() + "°C");
-        setTextValue(R.id.current_weather_humidity, currentWeather.getHumidity() + "%");
-        setTextValue(R.id.current_weather_wind, currentWeather.getWindSpeed() + "km/h");
-        setTextValue(R.id.current_weather_rain, currentWeather.getRain() + "mm");
-        setTextValue(R.id.current_weather_description, currentWeather.getDescription().toUpperCase());
+        setTextValue(view, R.id.current_weather_temperature, Double.toString(currentWeather.getTemperature()));
+        setTextValue(view, R.id.current_weather_humidity, Integer.toString(currentWeather.getHumidity()));
+        setTextValue(view, R.id.current_weather_wind, Double.toString(currentWeather.getWindSpeed()));
+        setTextValue(view, R.id.current_weather_rain, Double.toString(currentWeather.getRain()));
+        setTextValue(view, R.id.current_weather_description, currentWeather.getDescription().toUpperCase());
+
+        adapter = new WeatherListAdapter(getActivity(), weatherCollection.getHourlyWeather());
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
-    private void setTextValue(int viewId, String value) {
-        TextView textView = getView().findViewById(viewId);
+    private void setTextValue(View view, int viewId, String value) {
+        TextView textView = view.findViewById(viewId);
         textView.setText(value);
     }
 
 
     // -- Weather API Implementation --
-    private void loadWeatherData() {
+    private void loadWeatherData(View view) {
+        if(MainActivity.WEATHER_COLLECTION != null) {
+            displayWeather(MainActivity.WEATHER_COLLECTION, view);
+        }
+        else {
+            displayEmptyContent(view);
+        }
         getLastLocation();
-        new FetchWeatherTask().execute(LATITUDE, LONGITUDE);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -138,21 +157,26 @@ public class WeatherFragment extends Fragment {
 
         @Override
         protected void onPostExecute(WeatherCollection weatherCollection) {
-            if (weatherCollection == null) {
-                displayEmptyContent();
+            if(weatherCollection == null) {
+                if(MainActivity.WEATHER_COLLECTION == null) {
+                    displayEmptyContent(getView());
+                }
+                else {
+                    displayWeather(MainActivity.WEATHER_COLLECTION, getView());
+                }
             }
             else {
-                displayWeather(weatherCollection);
+                MainActivity.WEATHER_COLLECTION = weatherCollection;
+                displayWeather(MainActivity.WEATHER_COLLECTION, getView());
             }
         }
     }
 
     // -- Getting Location --
-    private void assignLocation(double latitude, double longitude) {
-        Log.v(LOG_TAG, "Latitude: " + latitude);
-        Log.v(LOG_TAG, "Longitude: " + longitude);
+    private void assignLocation(Double latitude, Double longitude) {
         LATITUDE = latitude;
         LONGITUDE = longitude;
+        new FetchWeatherTask().execute(LATITUDE, LONGITUDE);
     }
 
     private boolean checkPermissions() {
@@ -187,32 +211,51 @@ public class WeatherFragment extends Fragment {
         }
     }
 
+    private void getLastLocationWrapper() {
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(
+                new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        Location location = task.getResult();
+                        if (location == null) {
+                            requestNewLocationData();
+                        } else {
+                            assignLocation(location.getLatitude(), location.getLongitude());
+                        }
+                    }
+                }
+        );
+    }
+
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
-                mFusedLocationClient.getLastLocation().addOnCompleteListener(
-                        new OnCompleteListener<Location>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Location> task) {
-                                Location location = task.getResult();
-                                if (location == null) {
-                                    requestNewLocationData();
-                                } else {
-                                    assignLocation(location.getLatitude(), location.getLongitude());
-                                }
-                            }
-                        }
-                );
-            } else {
+                getLastLocationWrapper();
+            } else  {
                 Toast.makeText(getActivity(), "Turn on location to get the weather data", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
+                startActivityForResult(intent, 1234);
             }
         } else {
             requestPermissions();
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1234) {
+            if(isLocationEnabled()) {
+                getLastLocationWrapper();
+            }
+            else {
+                assignLocation(null, null);
+            }
+        }
+    }
+
 
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
