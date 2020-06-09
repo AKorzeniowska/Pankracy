@@ -9,19 +9,26 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agh.edu.pankracy.data.PlantContract;
 import com.agh.edu.pankracy.data.PlantDBHelper;
+import com.agh.edu.pankracy.utils.DateUtils;
 
 import org.w3c.dom.Text;
+
+import java.text.ParseException;
+import java.util.Date;
 
 public class PlantDetailsActivity extends AppCompatActivity {
 
@@ -33,7 +40,8 @@ public class PlantDetailsActivity extends AppCompatActivity {
     private String species;
     private Integer watering;
     private Integer minTemperature;
-    private String lastWatering;
+    private Date lastWatering = null;
+    private String lastWateringText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +115,12 @@ public class PlantDetailsActivity extends AppCompatActivity {
             species = cursor.getString(speciesColumnIndex);
             watering = cursor.getInt(wateringColumnIndex);
             minTemperature = cursor.getInt(minTempColumnIndex);
-            lastWatering = cursor.getString(lastWateringColumnIndex);
+            lastWateringText = cursor.getString(lastWateringColumnIndex);
+            try {
+                lastWatering = DateUtils.sdf.parse(lastWateringText);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         cursor.close();
     }
@@ -118,14 +131,19 @@ public class PlantDetailsActivity extends AppCompatActivity {
         TextView wateringText = (TextView) findViewById(R.id.watering_freq);
         TextView minTempText = (TextView) findViewById(R.id.min_temp);
         TextView lastWateringText = (TextView) findViewById(R.id.last_watering);
+        ImageView plantIcon = findViewById(R.id.avatar);
 
         nameText.setText(name);
         speciesText.setText(species);
         //wateringText.setText(getString(R.string.how_often_text, watering));
         wateringText.setText(watering.toString());
-        lastWateringText.setText(lastWatering);
+        lastWateringText.setText(this.lastWateringText);
         //minTempText.setText(getString(R.string.higher_than_temp_text, minTemperature));
         minTempText.setText(minTemperature.toString());
+        if (lastWatering != null && DateUtils.getNumberOfDaysBetweenGivenDateAndNextWateringMyGodThatsALongAssMethodName(new Date(), lastWatering, watering) < 0){
+            //changeColor
+            plantIcon.setColorFilter(Color.argb(255, 219, 164, 164));
+        }
     }
 
     public void editPlant () {

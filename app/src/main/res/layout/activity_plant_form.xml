@@ -29,8 +29,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-    <com.google.android.material.textfield.TextInputLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/name_edit"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
@@ -111,9 +115,12 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/last_watering_edit_text"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:inputType="none"
+                android:ems="10"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="date" />
+                android:layout_height="wrap_content"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,6 +147,5 @@
 
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
