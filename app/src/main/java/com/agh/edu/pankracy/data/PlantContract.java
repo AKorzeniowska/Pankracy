@@ -20,5 +20,4 @@ import android.provider.BaseColumns;
         public final static String COLUMN_WATERING = "watering";
         public final static String COLUMN_MIN_TEMP = "min_temperature";
         public final static String COLUMN_LAST_WATERING = "last_watering";
-
     }
