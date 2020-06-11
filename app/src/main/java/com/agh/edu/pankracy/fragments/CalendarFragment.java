@@ -190,7 +190,7 @@ public class CalendarFragment extends Fragment {
         }
 
         compactCalendar.removeAllEvents();
-        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_LAST_WATERING, PlantContract.COLUMN_WATERING, PlantContract.COLUMN_MIN_TEMP};
+        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_LAST_WATERING, PlantContract.COLUMN_WATERING, PlantContract.COLUMN_MIN_TEMP, PlantContract.COLUMN_IS_OUTSIDE};
         Cursor cursor = getActivity().getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
 
         int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
@@ -199,6 +199,7 @@ public class CalendarFragment extends Fragment {
         int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
         int lastWateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
         int minTemperatureColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
+        int isOutsideColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_IS_OUTSIDE);
 
         while (cursor.moveToNext()){
             String currentName = cursor.getString(nameColumnIndex);
@@ -206,6 +207,7 @@ public class CalendarFragment extends Fragment {
             Date lastWatering = DateUtils.sdf.parse(cursor.getString(lastWateringColumnIndex));
             int wateringFrequency = cursor.getInt(wateringColumnIndex);
             int minTemperature = cursor.getInt(minTemperatureColumnIndex);
+            boolean isOutside = cursor.getInt(isOutsideColumnIndex) == 1;
             if (currentName.equals("")){
                 currentName = cursor.getString(speciesColumnIndex);
             }
@@ -224,22 +226,24 @@ public class CalendarFragment extends Fragment {
             compactCalendar.addEvent(event);
 
 
-            if (todayTemp != null && todayTemp <= minTemperature){
-                CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
-                Event tempEvent = new Event(lowTemperatureColor, today.getTime(), calendarEvent);
-                compactCalendar.addEvent(tempEvent);
-            }
+            if (isOutside) {
+                if (todayTemp != null && todayTemp <= minTemperature) {
+                    CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
+                    Event tempEvent = new Event(lowTemperatureColor, today.getTime(), calendarEvent);
+                    compactCalendar.addEvent(tempEvent);
+                }
 
-            if (tomorrowTemp != null && tomorrowTemp <= minTemperature){
-                CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
-                Event tempEvent = new Event(lowTemperatureColor, tomorrow.getTime(), calendarEvent);
-                compactCalendar.addEvent(tempEvent);
-            }
+                if (tomorrowTemp != null && tomorrowTemp <= minTemperature) {
+                    CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
+                    Event tempEvent = new Event(lowTemperatureColor, tomorrow.getTime(), calendarEvent);
+                    compactCalendar.addEvent(tempEvent);
+                }
 
-            if (inTwoDaysTemp != null && inTwoDaysTemp <= minTemperature){
-                CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
-                Event tempEvent = new Event(lowTemperatureColor, inTwoDays.getTime(), calendarEvent);
-                compactCalendar.addEvent(tempEvent);
+                if (inTwoDaysTemp != null && inTwoDaysTemp <= minTemperature) {
+                    CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
+                    Event tempEvent = new Event(lowTemperatureColor, inTwoDays.getTime(), calendarEvent);
+                    compactCalendar.addEvent(tempEvent);
+                }
             }
         }
         cursor.close();

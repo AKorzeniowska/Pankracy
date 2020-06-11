@@ -157,6 +157,7 @@ public class PlantFormActivity extends AppCompatActivity {
         values.put(PlantContract.COLUMN_WATERING, wateringInt);
         values.put(PlantContract.COLUMN_MIN_TEMP, minTempInt);
         values.put(PlantContract.COLUMN_LAST_WATERING, lastWatering);
+        values.put(PlantContract.COLUMN_IS_OUTSIDE, 0);
 
         if (this.id == 0) {
             Uri newUri = getContentResolver().insert(PlantContract.CONTENT_URI, values);
