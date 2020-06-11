@@ -24,9 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agh.edu.pankracy.CalendarActivity;
+import com.agh.edu.pankracy.MainActivity;
 import com.agh.edu.pankracy.R;
 import com.agh.edu.pankracy.adapters.EventsListAdapter;
 import com.agh.edu.pankracy.data.PlantContract;
+import com.agh.edu.pankracy.data.weather.Weather;
 import com.agh.edu.pankracy.models.CalendarEvent;
 import com.agh.edu.pankracy.utils.DateUtils;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -34,10 +36,14 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,7 +62,10 @@ public class CalendarFragment extends Fragment {
 
     private int wateringColor = Color.YELLOW;
     private int forgotToWaterColor = Color.RED;
-    private int lowTemperature = Color.BLUE;
+    private int lowTemperatureColor = Color.WHITE;
+    private int windyColor = Color.GREEN;
+
+    private static final double WIND_SPEED_THRESHOLD = 90.0;
 
     private CompactCalendarView compactCalendar;
     private ArrayList<Event> selectedDayEvents = new ArrayList<>();
@@ -103,7 +112,6 @@ public class CalendarFragment extends Fragment {
                 container, false);
 
         eventsList = view.findViewById(R.id.calendar_list_view);
-        selectedDayEvents.add(new Event(Color.RED, (new Date()).getTime(), new CalendarEvent("test", 1, 1)));
         eventsListAdapter = new EventsListAdapter(getActivity(), selectedDayEvents);
         eventsList.setAdapter(eventsListAdapter);
 
@@ -158,8 +166,31 @@ public class CalendarFragment extends Fragment {
     }
 
     private void getData() throws ParseException {
+
+        Date today = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(today);
+        Double todayTemp = getMinimalTemperatureForDate(today);
+        Double todayWind = getMaximalWindSpeedForDate(today);
+        if (todayWind != null && todayWind > WIND_SPEED_THRESHOLD){
+        }
+
+        c.add(Calendar.DATE, 1);
+        Date tomorrow = c.getTime();
+        Double tomorrowTemp = getMinimalTemperatureForDate(tomorrow);
+        Double tomorrowWind = getMaximalWindSpeedForDate(tomorrow);
+        if (tomorrowWind != null && tomorrowWind > WIND_SPEED_THRESHOLD){
+        }
+
+        c.add(Calendar.DATE, 1);
+        Date inTwoDays = c.getTime();
+        Double inTwoDaysTemp = getMinimalTemperatureForDate(inTwoDays);
+        Double inTwoDaysWind = getMaximalWindSpeedForDate(inTwoDays);
+        if (inTwoDaysWind != null && inTwoDaysWind > WIND_SPEED_THRESHOLD){
+        }
+
         compactCalendar.removeAllEvents();
-        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_LAST_WATERING, PlantContract.COLUMN_WATERING};
+        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_LAST_WATERING, PlantContract.COLUMN_WATERING, PlantContract.COLUMN_MIN_TEMP};
         Cursor cursor = getActivity().getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
 
         int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
@@ -167,12 +198,14 @@ public class CalendarFragment extends Fragment {
         int idColumnIndex = cursor.getColumnIndex(PlantContract._ID);
         int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
         int lastWateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
+        int minTemperatureColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
 
         while (cursor.moveToNext()){
             String currentName = cursor.getString(nameColumnIndex);
             int currentId = cursor.getInt(idColumnIndex);
             Date lastWatering = DateUtils.sdf.parse(cursor.getString(lastWateringColumnIndex));
             int wateringFrequency = cursor.getInt(wateringColumnIndex);
+            int minTemperature = cursor.getInt(minTemperatureColumnIndex);
             if (currentName.equals("")){
                 currentName = cursor.getString(speciesColumnIndex);
             }
@@ -182,16 +215,58 @@ public class CalendarFragment extends Fragment {
 
             if (nextWateringDate.before(new Date())) {
                 CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.WATERING);
-                event = new Event(forgotToWaterColor, nextWateringDate.getTime(), calendarEvent);//currentName + ": you forgot to water me!");
+                event = new Event(forgotToWaterColor, nextWateringDate.getTime(), calendarEvent);
             }
             else {
                 CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.FORGOT_TO_WATER);
-                event = new Event(wateringColor, nextWateringDate.getTime(), calendarEvent);// currentName + ": remember to water me");
+                event = new Event(wateringColor, nextWateringDate.getTime(), calendarEvent);
             }
             compactCalendar.addEvent(event);
+
+
+            if (todayTemp != null && todayTemp <= minTemperature){
+                CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
+                Event tempEvent = new Event(lowTemperatureColor, today.getTime(), calendarEvent);
+                compactCalendar.addEvent(tempEvent);
+            }
+
+            if (tomorrowTemp != null && tomorrowTemp <= minTemperature){
+                CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
+                Event tempEvent = new Event(lowTemperatureColor, tomorrow.getTime(), calendarEvent);
+                compactCalendar.addEvent(tempEvent);
+            }
+
+            if (inTwoDaysTemp != null && inTwoDaysTemp <= minTemperature){
+                CalendarEvent calendarEvent = new CalendarEvent(currentName, currentId, CalendarEvent.TOO_COLD);
+                Event tempEvent = new Event(lowTemperatureColor, inTwoDays.getTime(), calendarEvent);
+                compactCalendar.addEvent(tempEvent);
+            }
         }
         cursor.close();
+
         eventsListAdapter.notifyDataSetChanged();
+    }
+
+    private Double getMinimalTemperatureForDate(Date date){
+        if(MainActivity.WEATHER_COLLECTION != null) {
+            List<Weather> weather = MainActivity.WEATHER_COLLECTION.getHourlyWeather();
+            List<Weather> todayWeather = weather.stream().filter(x -> x.getDate().getDate() == date.getDate())
+                    .collect(Collectors.toList());
+            return todayWeather.stream().min(Comparator.comparing(Weather::getTemperature))
+                    .get().getTemperature();
+        }
+        return null;
+    }
+
+    private Double getMaximalWindSpeedForDate(Date date){
+        if(MainActivity.WEATHER_COLLECTION != null) {
+            List<Weather> weather = MainActivity.WEATHER_COLLECTION.getHourlyWeather();
+            List<Weather> todayWeather = weather.stream().filter(x -> x.getDate().getDate() == date.getDate())
+                    .collect(Collectors.toList());
+            return todayWeather.stream().max(Comparator.comparing(Weather::getWindSpeed))
+                    .get().getWindSpeed();
+        }
+        return null;
     }
 
     private void showFinishEventDialog(Event event, final int position) {
