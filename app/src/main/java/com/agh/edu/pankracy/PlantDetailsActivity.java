@@ -135,15 +135,16 @@ public class PlantDetailsActivity extends AppCompatActivity {
         TextView wateringText = (TextView) findViewById(R.id.watering_freq);
         TextView minTempText = (TextView) findViewById(R.id.min_temp);
         TextView lastWateringText = (TextView) findViewById(R.id.last_watering);
+        TextView isOutsideText = (TextView) findViewById(R.id.is_outside);
         ImageView plantIcon = findViewById(R.id.avatar);
 
         nameText.setText(name);
         speciesText.setText(species);
-        //wateringText.setText(getString(R.string.how_often_text, watering));
         wateringText.setText(watering.toString());
         lastWateringText.setText(this.lastWateringText);
-        //minTempText.setText(getString(R.string.higher_than_temp_text, minTemperature));
         minTempText.setText(minTemperature.toString());
+        isOutsideText.setText(isOutside ? "Yes" : "No");
+
         if (lastWatering != null && DateUtils.getNumberOfDaysBetweenGivenDateAndNextWateringMyGodThatsALongAssMethodName(new Date(), lastWatering, watering) < 0){
             //changeColor
             plantIcon.setColorFilter(Color.argb(255, 219, 164, 164));

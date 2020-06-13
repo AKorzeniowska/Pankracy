@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,12 +36,15 @@ public class PlantFormActivity extends AppCompatActivity {
     private Integer watering;
     private Integer minTemperature;
     private String lastWatering;
+    private Boolean isOutside;
 
     EditText nameText;
     EditText speciesText;
     EditText wateringText;
     EditText minTempText;
     TextView lastWateringText;
+    RadioButton isOutsideTrue;
+    RadioButton isOutsideFalse;
 
     private DatePickerDialog.OnDateSetListener datePickerListener;
 
@@ -56,6 +60,8 @@ public class PlantFormActivity extends AppCompatActivity {
         wateringText = findViewById(R.id.watering_edit_text);
         minTempText = findViewById(R.id.min_temp_edit_text);
         lastWateringText = findViewById(R.id.last_watering_edit_text);
+        isOutsideTrue = findViewById(R.id.radio_outside);
+        isOutsideFalse = findViewById(R.id.radio_inside);
 
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -104,7 +110,8 @@ public class PlantFormActivity extends AppCompatActivity {
                 PlantContract.COLUMN_SPECIES,
                 PlantContract.COLUMN_WATERING,
                 PlantContract.COLUMN_MIN_TEMP,
-                PlantContract.COLUMN_LAST_WATERING
+                PlantContract.COLUMN_LAST_WATERING,
+                PlantContract.COLUMN_IS_OUTSIDE
         };
         String selection = PlantContract._ID + "=?";
         String [] selectionArgs = {String.valueOf(id)};
@@ -116,6 +123,7 @@ public class PlantFormActivity extends AppCompatActivity {
         int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
         int minTempColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
         int lastWateringColumnIndex  = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
+        int isOutsideColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_IS_OUTSIDE);
 
         while (cursor.moveToNext()){
             name = cursor.getString(nameColumnIndex);
@@ -123,6 +131,7 @@ public class PlantFormActivity extends AppCompatActivity {
             watering = cursor.getInt(wateringColumnIndex);
             minTemperature = cursor.getInt(minTempColumnIndex);
             lastWatering = cursor.getString(lastWateringColumnIndex);
+            isOutside = cursor.getInt(isOutsideColumnIndex) == 1;
         }
         cursor.close();
     }
@@ -133,6 +142,13 @@ public class PlantFormActivity extends AppCompatActivity {
         wateringText.setText(watering.toString());
         lastWateringText.setText(lastWatering);
         minTempText.setText(minTemperature.toString());
+        if (isOutside){
+            isOutsideTrue.setChecked(true);
+            isOutsideFalse.setChecked(false);
+        } else {
+            isOutsideTrue.setChecked(false);
+            isOutsideFalse.setChecked(true);
+        }
 
     }
 
@@ -143,7 +159,7 @@ public class PlantFormActivity extends AppCompatActivity {
         String minTemp = minTempText.getText().toString();
         String lastWatering = lastWateringText.getText().toString();
 
-        if (name.isEmpty() || species.isEmpty() || watering.isEmpty() || minTemp.isEmpty() || lastWatering.isEmpty()){
+        if (name.isEmpty() || species.isEmpty() || watering.isEmpty() || minTemp.isEmpty() || lastWatering.isEmpty() || isOutside == null){
             Toast.makeText(this, "Missing data!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -157,7 +173,7 @@ public class PlantFormActivity extends AppCompatActivity {
         values.put(PlantContract.COLUMN_WATERING, wateringInt);
         values.put(PlantContract.COLUMN_MIN_TEMP, minTempInt);
         values.put(PlantContract.COLUMN_LAST_WATERING, lastWatering);
-        values.put(PlantContract.COLUMN_IS_OUTSIDE, 0);
+        values.put(PlantContract.COLUMN_IS_OUTSIDE, isOutside ? 1 : 0);
 
         if (this.id == 0) {
             Uri newUri = getContentResolver().insert(PlantContract.CONTENT_URI, values);
@@ -218,7 +234,20 @@ public class PlantFormActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+    }
 
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch(view.getId()) {
+            case R.id.radio_inside:
+                if (checked)
+                    isOutside = false;
+                    break;
+            case R.id.radio_outside:
+                if (checked)
+                    isOutside = true;
+                    break;
+        }
 
     }
 }

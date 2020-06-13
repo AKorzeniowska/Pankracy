@@ -40,25 +40,14 @@ public class EventsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // inflate the layout for each list row
         if (convertView == null) {
             convertView = LayoutInflater.from(context).
                     inflate(R.layout.layout_list_view_row_events, parent, false);
         }
 
-        // get current item to be displayed
         Event currentItem = (Event) getItem(position);
-
-        // get the TextView for item name and item description
         TextView textViewItemName = convertView.findViewById(R.id.text_view_event_name);
-//        TextView textViewItemDescription = (TextView)
-//                convertView.findViewById(R.id.text_view_item_description);
-
-        //sets the text for item name and item description from the current item object
         textViewItemName.setText(((CalendarEvent)currentItem.getData()).getMessage());
-//        textViewItemDescription.setText(currentItem.getItemDescription());
-
-        // returns the view for the current row
         return convertView;
     }
 }

@@ -18,6 +18,9 @@ public class CalendarEvent {
         this.eventType = eventType;
     }
 
+    public CalendarEvent(int eventType) {
+        this.eventType = eventType;
+    }
 
     public String getPlantName() {
         return plantName;

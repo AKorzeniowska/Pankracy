@@ -65,7 +65,7 @@ public class CalendarFragment extends Fragment {
     private int lowTemperatureColor = Color.WHITE;
     private int windyColor = Color.GREEN;
 
-    private static final double WIND_SPEED_THRESHOLD = 90.0;
+    private static final double WIND_SPEED_THRESHOLD = 1.0;
 
     private CompactCalendarView compactCalendar;
     private ArrayList<Event> selectedDayEvents = new ArrayList<>();
@@ -166,6 +166,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void getData() throws ParseException {
+        compactCalendar.removeAllEvents();
 
         Date today = new Date();
         Calendar c = Calendar.getInstance();
@@ -180,6 +181,9 @@ public class CalendarFragment extends Fragment {
         Double tomorrowTemp = getMinimalTemperatureForDate(tomorrow);
         Double tomorrowWind = getMaximalWindSpeedForDate(tomorrow);
         if (tomorrowWind != null && tomorrowWind > WIND_SPEED_THRESHOLD){
+            CalendarEvent calendarEvent = new CalendarEvent(CalendarEvent.WINDY);
+            Event event = new Event(windyColor, tomorrow.getTime(), calendarEvent);
+            compactCalendar.addEvent(event);
         }
 
         c.add(Calendar.DATE, 1);
@@ -189,7 +193,6 @@ public class CalendarFragment extends Fragment {
         if (inTwoDaysWind != null && inTwoDaysWind > WIND_SPEED_THRESHOLD){
         }
 
-        compactCalendar.removeAllEvents();
         String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_LAST_WATERING, PlantContract.COLUMN_WATERING, PlantContract.COLUMN_MIN_TEMP, PlantContract.COLUMN_IS_OUTSIDE};
         Cursor cursor = getActivity().getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
 
@@ -256,6 +259,8 @@ public class CalendarFragment extends Fragment {
             List<Weather> weather = MainActivity.WEATHER_COLLECTION.getHourlyWeather();
             List<Weather> todayWeather = weather.stream().filter(x -> x.getDate().getDate() == date.getDate())
                     .collect(Collectors.toList());
+            if (todayWeather.isEmpty())
+                return null;
             return todayWeather.stream().min(Comparator.comparing(Weather::getTemperature))
                     .get().getTemperature();
         }
@@ -267,6 +272,8 @@ public class CalendarFragment extends Fragment {
             List<Weather> weather = MainActivity.WEATHER_COLLECTION.getHourlyWeather();
             List<Weather> todayWeather = weather.stream().filter(x -> x.getDate().getDate() == date.getDate())
                     .collect(Collectors.toList());
+            if (todayWeather.isEmpty())
+                return null;
             return todayWeather.stream().max(Comparator.comparing(Weather::getWindSpeed))
                     .get().getWindSpeed();
         }
@@ -274,12 +281,16 @@ public class CalendarFragment extends Fragment {
     }
 
     private void showFinishEventDialog(Event event, final int position) {
+        final CalendarEvent calendarEvent = (CalendarEvent)event.getData();
+        if (calendarEvent.getEventType() == CalendarEvent.WINDY)
+            return;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getLayoutInflater();
         View dialog = inflater.inflate(R.layout.dialog_layout, null);
         builder.setView(dialog);
         ((TextView)dialog.findViewById(R.id.dialog_title)).setText("Hey");
-        final CalendarEvent calendarEvent = (CalendarEvent)event.getData();
+
         if(calendarEvent.getEventType() == CalendarEvent.FORGOT_TO_WATER || calendarEvent.getEventType() == CalendarEvent.WATERING)
             ((TextView)dialog.findViewById(R.id.dialog_message)).setText("Have you already watered " + calendarEvent.getPlantName() + "?");
         else if (calendarEvent.getEventType() == CalendarEvent.TOO_COLD)
@@ -293,12 +304,16 @@ public class CalendarFragment extends Fragment {
                     ContentValues values = new ContentValues();
                     values.put(PlantContract.COLUMN_LAST_WATERING, today);
                     getActivity().getContentResolver().update(PlantContract.CONTENT_URI_ID(calendarEvent.getPlantId()), values, null, null);
-
-                    try {
-                        getData();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                }
+                else if (calendarEvent.getEventType() == CalendarEvent.TOO_COLD){
+                    ContentValues values = new ContentValues();
+                    values.put(PlantContract.COLUMN_IS_OUTSIDE, 0);
+                    getActivity().getContentResolver().update(PlantContract.CONTENT_URI_ID(calendarEvent.getPlantId()), values, null, null);
+                }
+                try {
+                    getData();
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
             }
         });
