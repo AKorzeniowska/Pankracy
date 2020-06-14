@@ -13,13 +13,10 @@ import android.widget.TextView;
 
 import com.agh.edu.pankracy.data.weather.WeatherCollection;
 import com.agh.edu.pankracy.fragments.CalendarFragment;
-import com.agh.edu.pankracy.fragments.HomeFragment;
+import com.agh.edu.pankracy.fragments.AboutFragment;
 import com.agh.edu.pankracy.fragments.ListOfPlantsFragment;
 import com.agh.edu.pankracy.fragments.WeatherFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import com.agh.edu.pankracy.notifications.NotificationUtils;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -40,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         if(null == savedInstanceState) {
-            openFragment(HomeFragment.newInstance("", ""));
+            openFragment(ListOfPlantsFragment.newInstance());
         }
     }
 
@@ -67,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
-                        case R.id.nav_home:
-                            openFragment(HomeFragment.newInstance("", ""));
+                        case R.id.nav_about:
+                            openFragment(AboutFragment.newInstance());
                             return true;
                         case R.id.nav_list:
                             openFragment(ListOfPlantsFragment.newInstance());

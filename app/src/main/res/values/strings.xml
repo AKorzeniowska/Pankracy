@@ -12,7 +12,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="home">Home</string>
+    <string name="about">About</string>
     <string name="plants_list">Plants list</string>
     <string name="weather">Weather</string>
     <string name="calendar">Calendar</string>
@@ -41,4 +41,10 @@
     <string name="is_the_plant_outside">Is the plant outside?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="app_description">Remember to water your plants!</string>
+    <string name="copyright_text">© All rights reserved</string>
+    <string name="creator_one">Agata Korzeniowska</string>
+    <string name="creator_two">Adam Surówka</string>
+    <string name="creator_three">Oskar Pawica</string>
+    <string name="made_by">Made by:</string>
 </resources>
