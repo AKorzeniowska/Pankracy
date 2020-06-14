@@ -5,11 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import android.content.Intent;
+
+import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import com.agh.edu.pankracy.data.weather.WeatherCollection;
 import com.agh.edu.pankracy.fragments.CalendarFragment;
@@ -19,7 +19,6 @@ import com.agh.edu.pankracy.fragments.WeatherFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     public static WeatherCollection WEATHER_COLLECTION = null;
 
@@ -37,26 +36,26 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         if(null == savedInstanceState) {
-            openFragment(ListOfPlantsFragment.newInstance());
+            openFragment(ListOfPlantsFragment.newInstance(), false);
         }
     }
 
     private void initiateToolbar() {
         appToolbar = findViewById(R.id.my_toolbar);
-        TextView mTitle = appToolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(appToolbar);
         getSupportActionBar().setIcon(R.drawable.ic_logo_32dp);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
-    public void openCalendarActivity(View view) {
-        Intent calendarIntent = new Intent(this, CalendarActivity.class);
-        startActivity(calendarIntent);
-    }
 
-    public void openFragment(Fragment fragment) {
+    @SuppressLint("SourceLockedOrientationActivity")
+    public void openFragment(Fragment fragment, boolean twoOrientations) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
+        if(twoOrientations)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        else
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         transaction.commit();
     }
 
@@ -65,16 +64,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.nav_about:
-                            openFragment(AboutFragment.newInstance());
+                            openFragment(AboutFragment.newInstance(), false);
                             return true;
                         case R.id.nav_list:
-                            openFragment(ListOfPlantsFragment.newInstance());
+                            openFragment(ListOfPlantsFragment.newInstance(), false);
                             return true;
                         case R.id.nav_weather:
-                            openFragment(WeatherFragment.newInstance());
+                            openFragment(WeatherFragment.newInstance(), false);
                             return true;
                         case R.id.nav_calendar:
-                            openFragment(CalendarFragment.newInstance("", ""));
+                            openFragment(CalendarFragment.newInstance(), true);
                             return true;
                     }
                     return false;
