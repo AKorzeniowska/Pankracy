@@ -85,7 +85,7 @@ public class ListOfPlantsFragment extends Fragment {
         }
     }
 
-    private void listGetter(){
+    public void listGetter(){
         listViewData.clear();
         String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_LAST_WATERING, PlantContract.COLUMN_WATERING, PlantContract.COLUMN_MIN_TEMP, PlantContract.COLUMN_IS_OUTSIDE};
         Cursor cursor = getActivity().getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
@@ -112,13 +112,13 @@ public class ListOfPlantsFragment extends Fragment {
         }
         cursor.close();
 
-        adapter = new PlantListAdapter(getActivity(), listViewData);
+        adapter = new PlantListAdapter(getActivity(), listViewData, this);
         listView.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
     }
 
-    private void chosenPlantIntentCreator() {
+    public void chosenPlantIntentCreator() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
