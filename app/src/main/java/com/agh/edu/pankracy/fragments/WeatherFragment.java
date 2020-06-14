@@ -112,6 +112,7 @@ public class WeatherFragment extends Fragment {
 
     private void displayWeather(WeatherCollection weatherCollection, View view) {
         listView.setVisibility(View.VISIBLE);
+        if(view == null) return;
         view.findViewById(R.id.no_location_wrapper).setVisibility(View.GONE);
         view.findViewById(R.id.divider).setVisibility(View.VISIBLE);
         view.findViewById(R.id.current_weather_wrapper).setVisibility(View.VISIBLE);

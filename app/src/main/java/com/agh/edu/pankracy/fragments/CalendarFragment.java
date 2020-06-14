@@ -15,6 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -129,11 +131,13 @@ public class CalendarFragment extends Fragment {
     }
 
     private void setViewAndListener(View view){
-        Toolbar toolbar = view.findViewById(R.id.my_toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        final ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(dateFormatMonth.format(Calendar.getInstance().getTime()));
+        //Toolbar toolbar = view.findViewById(R.id.my_toolbar);
+        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        //final ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(false);
+        //actionBar.setTitle(dateFormatMonth.format(Calendar.getInstance().getTime()));
+        TextView month = view.findViewById(R.id.month_name);
+        month.setText(dateFormatMonth.format(Calendar.getInstance().getTime()));
 
         eventsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -160,7 +164,8 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                actionBar.setTitle(dateFormatMonth.format(firstDayOfNewMonth));
+                //actionBar.setTitle(dateFormatMonth.format(firstDayOfNewMonth));
+                month.setText(dateFormatMonth.format(firstDayOfNewMonth));
             }
         });
     }

@@ -24,26 +24,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/my_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:theme="@style/ToolBarStyle">
-
-            <TextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                app:theme="@style/AppNameStyle"
-                tools:layout_editor_absoluteX="25dp"
-                tools:layout_editor_absoluteY="13dp" />
-        </androidx.appcompat.widget.Toolbar>
-
+<TextView
+    android:id="@+id/month_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:background="@color/colorPrimary"
+    android:textColor="@color/white"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:textAlignment="center"
+    android:padding="5sp"
+    app:layout_constraintBottom_toTopOf="@+id/compactcalendar_view"
+    />
         <com.github.sundeepk.compactcalendarview.CompactCalendarView
             android:id="@+id/compactcalendar_view"
             android:layout_width="fill_parent"
@@ -59,7 +52,7 @@
             app:compactCalendarTextSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/month_name" />
 
         <ListView
             android:id="@+id/calendar_list_view"
