@@ -32,12 +32,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
         initiateToolbar();
         bottomNavigation = findViewById(R.id.bottom_nav);
 
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        openFragment(HomeFragment.newInstance("", ""));
+        if(null == savedInstanceState) {
+            openFragment(HomeFragment.newInstance("", ""));
+        }
     }
 
     private void initiateToolbar() {

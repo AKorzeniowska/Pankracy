@@ -25,8 +25,7 @@
         <activity android:name=".PlantFormActivity" />
         <activity android:name=".PlantDetailsActivity" />
         <activity android:name=".PlantListActivity" />
-        <activity android:name=".MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
