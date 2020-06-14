@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.agh.edu.pankracy.R;
 import com.agh.edu.pankracy.data.PlantContract;
 import com.agh.edu.pankracy.data.plants.Plant;
+import com.agh.edu.pankracy.fragments.ListOfPlantsFragment;
 import com.agh.edu.pankracy.utils.DateUtils;
 
 import java.text.ParseException;
@@ -29,11 +30,14 @@ public class PlantListAdapter extends BaseAdapter {
     private Context context;
     private LinkedHashMap<Integer, Plant> mData;
     private Integer[] mKeys;
+    private ListOfPlantsFragment lopFragment;
 
-    public PlantListAdapter(Context context, LinkedHashMap<Integer, Plant> items) {
+    public PlantListAdapter(Context context, LinkedHashMap<Integer, Plant> items,
+                            ListOfPlantsFragment lopFragment) {
         this.context = context;
         this.mData = items;
         mKeys = mData.keySet().toArray(new Integer[items.size()]);
+        this.lopFragment = lopFragment;
     }
 
     private class ViewHolder {
@@ -99,6 +103,8 @@ public class PlantListAdapter extends BaseAdapter {
                 ContentValues values = new ContentValues();
                 values.put(PlantContract.COLUMN_IS_OUTSIDE, plant.getIsOutside() == 0 ? 1 : 0);
                 context.getContentResolver().update(PlantContract.CONTENT_URI_ID((int) getItemId(position)), values, null, null);
+                lopFragment.listGetter();
+                lopFragment.chosenPlantIntentCreator();
             }
         });
 
@@ -108,6 +114,8 @@ public class PlantListAdapter extends BaseAdapter {
                 ContentValues values = new ContentValues();
                 values.put(PlantContract.COLUMN_LAST_WATERING, DateUtils.sdf.format(new Date()));
                 context.getContentResolver().update(PlantContract.CONTENT_URI_ID((int) getItemId(position)), values, null, null);
+                lopFragment.listGetter();
+                lopFragment.chosenPlantIntentCreator();
             }
         });
 
