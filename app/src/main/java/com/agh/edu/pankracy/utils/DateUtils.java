@@ -23,7 +23,7 @@ public class DateUtils {
         return getDateFromMillis(dateInMillis).toString();
     }
 
-    public static long getNumberOfDaysBetweenGivenDateAndNextWateringMyGodThatsALongAssMethodName(Date givenDate, Date lastWatering, int wateringFrequency){
+    public static long getNumberOfDaysBetweenGivenDateAndNextWatering(Date givenDate, Date lastWatering, int wateringFrequency){
         Date nextWatering = getNextWateringDate(lastWatering, wateringFrequency);
         long days = ChronoUnit.DAYS.between(parseDateToLocalDateTime(givenDate), parseDateToLocalDateTime(nextWatering));
         return days;

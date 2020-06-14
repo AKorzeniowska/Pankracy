@@ -17,14 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".CalendarActivity"></activity>
-        <activity
-            android:name=".WeatherTestActivity"
-            android:label="@string/title_activity_weather_test"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PlantFormActivity" />
         <activity android:name=".PlantDetailsActivity" />
-        <activity android:name=".PlantListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,11 +33,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-
-        <provider
-            android:name=".data.PlantProvider"
-            android:authorities="com.agh.edu.pankracy.plants"
-            android:exported="false" />
 
         <service android:name=".notifications.NotificationIntentService"
             android:exported="false"/>
