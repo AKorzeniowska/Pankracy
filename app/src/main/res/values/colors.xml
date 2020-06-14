@@ -2,8 +2,10 @@
 <resources>
     <color name="colorPrimary">#0077B5</color>
     <color name="colorPrimaryDimmed">#BDD2DD</color>
+    <color name="colorPrimaryVeryDimmed">#D5E0E6</color>
     <color name="colorPrimaryDark">#005785</color>
     <color name="colorAccent">#00BBDC</color>
+    <color name="colorRedDimmed">#DBA4A4</color>
     <color name="white">#FFFFFF</color>
     <color name="InactiveBottomNavIconColor">#5C889F</color>
 </resources>

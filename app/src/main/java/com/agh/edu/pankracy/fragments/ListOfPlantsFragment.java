@@ -23,6 +23,7 @@ import com.agh.edu.pankracy.R;
 import com.agh.edu.pankracy.adapters.PlantListAdapter;
 import com.agh.edu.pankracy.data.PlantContract;
 import com.agh.edu.pankracy.data.PlantDBHelper;
+import com.agh.edu.pankracy.data.plants.Plant;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,7 +37,7 @@ public class ListOfPlantsFragment extends Fragment {
     private static final String LOG_TAG = ListOfPlantsFragment.class.getSimpleName();
 
     private PlantDBHelper mDbHelper;
-    private LinkedHashMap<Integer, String> listViewData = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, Plant> listViewData = new LinkedHashMap<>();
     private ArrayList<Integer> idList = new ArrayList<>();
     private final static String FINAL_PLANT_ID = "final_plant_id";
     private ListView listView;
@@ -86,20 +87,28 @@ public class ListOfPlantsFragment extends Fragment {
 
     private void listGetter(){
         listViewData.clear();
-        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES};
+        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_LAST_WATERING, PlantContract.COLUMN_WATERING, PlantContract.COLUMN_MIN_TEMP, PlantContract.COLUMN_IS_OUTSIDE};
         Cursor cursor = getActivity().getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
 
         int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
         int speciesColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_SPECIES);
+        int isOutsideColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_IS_OUTSIDE);
+        int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
+        int minTempColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
+        int lastWateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
         int idColumnIndex = cursor.getColumnIndex(PlantContract._ID);
 
         while (cursor.moveToNext()){
-            String currentName = cursor.getString(nameColumnIndex);
             Integer currentId = Integer.parseInt(cursor.getString(idColumnIndex));
-            if (currentName.equals("")){
-                currentName = cursor.getString(speciesColumnIndex);
-            }
-            listViewData.put(currentId, currentName);
+            Plant plant = new Plant(
+                    cursor.getString(nameColumnIndex),
+                    cursor.getString(speciesColumnIndex),
+                    cursor.getInt(wateringColumnIndex),
+                    cursor.getInt(minTempColumnIndex),
+                    cursor.getString(lastWateringColumnIndex),
+                    cursor.getInt(isOutsideColumnIndex)
+            );
+            listViewData.put(currentId, plant);
         }
         cursor.close();
 

@@ -1,26 +1,36 @@
 package com.agh.edu.pankracy.adapters;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.agh.edu.pankracy.R;
+import com.agh.edu.pankracy.data.PlantContract;
+import com.agh.edu.pankracy.data.plants.Plant;
+import com.agh.edu.pankracy.utils.DateUtils;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 public class PlantListAdapter extends BaseAdapter {
 
     private Context context;
-    private LinkedHashMap<Integer, String> mData;
+    private LinkedHashMap<Integer, Plant> mData;
     private Integer[] mKeys;
 
-    public PlantListAdapter(Context context, LinkedHashMap<Integer, String> items) {
+    public PlantListAdapter(Context context, LinkedHashMap<Integer, Plant> items) {
         this.context = context;
         this.mData = items;
         mKeys = mData.keySet().toArray(new Integer[items.size()]);
@@ -28,6 +38,8 @@ public class PlantListAdapter extends BaseAdapter {
 
     private class ViewHolder {
         ImageView icon;
+        ImageView waterIcon;
+        ImageView isOutsideIcon;
         TextView title;
     }
 
@@ -37,7 +49,7 @@ public class PlantListAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public Plant getItem(int position) {
         return mData.get(mKeys[position]);
     }
 
@@ -57,14 +69,47 @@ public class PlantListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.title = convertView.findViewById(R.id.title);
             holder.icon = convertView.findViewById(R.id.icon);
+            holder.waterIcon = convertView.findViewById(R.id.water_it_icon);
+            holder.isOutsideIcon = convertView.findViewById(R.id.is_outside_icon);
             convertView.setTag(holder);
         }
         else {
             holder = (ViewHolder) convertView.getTag();
         }
+        Plant plant = getItem(position);
+        holder.title.setText(plant.getName());
 
-        holder.title.setText(getItem(position));
-        holder.icon.setImageResource(R.drawable.ic_local_florist_black_24dp);
+        try {
+            if (plant.getLastWatering() != null && DateUtils.getNumberOfDaysBetweenGivenDateAndNextWateringMyGodThatsALongAssMethodName(new Date(), DateUtils.sdf.parse(plant.getLastWatering()), plant.getWatering()) < 0){
+                //changeColor
+                holder.icon.setColorFilter(ContextCompat.getColor(context, R.color.colorRedDimmed));
+                holder.waterIcon.setColorFilter(ContextCompat.getColor(context, R.color.colorRedDimmed));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(plant.getIsOutside() == 0) {
+            holder.isOutsideIcon.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary));
+        }
+
+        holder.isOutsideIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContentValues values = new ContentValues();
+                values.put(PlantContract.COLUMN_IS_OUTSIDE, plant.getIsOutside() == 0 ? 1 : 0);
+                context.getContentResolver().update(PlantContract.CONTENT_URI_ID((int) getItemId(position)), values, null, null);
+            }
+        });
+
+        holder.waterIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContentValues values = new ContentValues();
+                values.put(PlantContract.COLUMN_LAST_WATERING, DateUtils.sdf.format(new Date()));
+                context.getContentResolver().update(PlantContract.CONTENT_URI_ID((int) getItemId(position)), values, null, null);
+            }
+        });
 
         return convertView;
     }
