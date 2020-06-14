@@ -3,15 +3,12 @@ package com.agh.edu.pankracy;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +21,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.agh.edu.pankracy.adapters.EventsListAdapter;
 import com.agh.edu.pankracy.data.PlantContract;
 import com.agh.edu.pankracy.models.CalendarEvent;
-import com.agh.edu.pankracy.notifications.NotificationUtils;
 import com.agh.edu.pankracy.utils.DateUtils;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -68,6 +64,7 @@ public class CalendarActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 
     private void setViewAndListener(){
         Toolbar toolbar = findViewById(R.id.my_toolbar);
