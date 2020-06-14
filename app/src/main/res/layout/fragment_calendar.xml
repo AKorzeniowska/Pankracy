@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,17 +8,69 @@
 
 
     <!-- TODO: Update blank fragment layout -->
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_today_black_24dp"
-        android:contentDescription="TODO" />
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Open old calendar activity"/>
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:src="@drawable/ic_today_black_24dp"-->
+<!--        android:contentDescription="TODO" />-->
+<!--    <Button-->
+<!--        android:id="@+id/button3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Open old calendar activity"/>-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:theme="@style/ToolBarStyle">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                app:theme="@style/AppNameStyle"
+                tools:layout_editor_absoluteX="25dp"
+                tools:layout_editor_absoluteY="13dp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.github.sundeepk.compactcalendarview.CompactCalendarView
+            android:id="@+id/compactcalendar_view"
+            android:layout_width="fill_parent"
+            android:layout_height="250dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:compactCalendarBackgroundColor="@color/colorPrimary"
+            app:compactCalendarCurrentDayBackgroundColor="@color/cardview_dark_background"
+            app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorAccent"
+            app:compactCalendarMultiEventIndicatorColor="#fff"
+            app:compactCalendarTargetHeight="250dp"
+            app:compactCalendarTextColor="#fff"
+            app:compactCalendarTextSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
+
+        <ListView
+            android:id="@+id/calendar_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/compactcalendar_view"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>

@@ -1,9 +1,12 @@
 package com.agh.edu.pankracy.models;
 
+import java.util.Date;
+
 public class CalendarEvent {
     public static final int WATERING = 1;
     public static final int FORGOT_TO_WATER = 2;
     public static final int TOO_COLD = 3;
+    public static final int WINDY = 4;
 
     private String plantName;
     private int plantId;
@@ -12,6 +15,10 @@ public class CalendarEvent {
     public CalendarEvent(String plantName, int plantId, int eventType) {
         this.plantName = plantName;
         this.plantId = plantId;
+        this.eventType = eventType;
+    }
+
+    public CalendarEvent(int eventType) {
         this.eventType = eventType;
     }
 
@@ -47,6 +54,8 @@ public class CalendarEvent {
                 return this.plantName + ": you forgot to water me! Hurry up!";
             case TOO_COLD:
                 return this.plantName + ": it's getting cold, take me back inside.";
+            case WINDY:
+                return "Watch out for your plants, it's going to be windy.";
             default:
                 return "";
         }

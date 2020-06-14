@@ -42,6 +42,7 @@ public class PlantDetailsActivity extends AppCompatActivity {
     private Integer minTemperature;
     private Date lastWatering = null;
     private String lastWateringText;
+    private Boolean isOutside;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +98,8 @@ public class PlantDetailsActivity extends AppCompatActivity {
                 PlantContract.COLUMN_SPECIES,
                 PlantContract.COLUMN_WATERING,
                 PlantContract.COLUMN_MIN_TEMP,
-                PlantContract.COLUMN_LAST_WATERING
+                PlantContract.COLUMN_LAST_WATERING,
+                PlantContract.COLUMN_IS_OUTSIDE
         };
         String selection = PlantContract._ID + "=?";
         String [] selectionArgs = {String.valueOf(id)};
@@ -109,6 +111,7 @@ public class PlantDetailsActivity extends AppCompatActivity {
         int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
         int minTempColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
         int lastWateringColumnIndex  = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
+        int isOutsideColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_IS_OUTSIDE);
 
         while (cursor.moveToNext()){
             name = cursor.getString(nameColumnIndex);
@@ -116,6 +119,7 @@ public class PlantDetailsActivity extends AppCompatActivity {
             watering = cursor.getInt(wateringColumnIndex);
             minTemperature = cursor.getInt(minTempColumnIndex);
             lastWateringText = cursor.getString(lastWateringColumnIndex);
+            isOutside = cursor.getInt(isOutsideColumnIndex) == 1;
             try {
                 lastWatering = DateUtils.sdf.parse(lastWateringText);
             } catch (ParseException e) {
@@ -131,15 +135,16 @@ public class PlantDetailsActivity extends AppCompatActivity {
         TextView wateringText = (TextView) findViewById(R.id.watering_freq);
         TextView minTempText = (TextView) findViewById(R.id.min_temp);
         TextView lastWateringText = (TextView) findViewById(R.id.last_watering);
+        TextView isOutsideText = (TextView) findViewById(R.id.is_outside);
         ImageView plantIcon = findViewById(R.id.avatar);
 
         nameText.setText(name);
         speciesText.setText(species);
-        //wateringText.setText(getString(R.string.how_often_text, watering));
         wateringText.setText(watering.toString());
         lastWateringText.setText(this.lastWateringText);
-        //minTempText.setText(getString(R.string.higher_than_temp_text, minTemperature));
         minTempText.setText(minTemperature.toString());
+        isOutsideText.setText(isOutside ? "Yes" : "No");
+
         if (lastWatering != null && DateUtils.getNumberOfDaysBetweenGivenDateAndNextWateringMyGodThatsALongAssMethodName(new Date(), lastWatering, watering) < 0){
             //changeColor
             plantIcon.setColorFilter(Color.argb(255, 219, 164, 164));

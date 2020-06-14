@@ -38,4 +38,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="do_you_really_want_to_delete_this_plant">Do you really want to delete this plant?</string>
     <string name="refresh_location">Refresh location</string>
+    <string name="is_the_plant_outside">Is the plant outside?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
