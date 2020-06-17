@@ -21,21 +21,19 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.agh.edu.pankracy.data.PlantContract;
-import com.agh.edu.pankracy.data.PlantDBHelper;
+import com.agh.edu.pankracy.data.plants.DBHelper;
+import com.agh.edu.pankracy.data.plants.Plant;
+import com.j256.ormlite.dao.Dao;
 
+import java.sql.SQLException;
 import java.util.Calendar;
 
 public class PlantFormActivity extends AppCompatActivity {
     private static final String FINAL_PLANT_ID = "final_plant_id";
-    PlantDBHelper mDbHelper;
+    private DBHelper dbHelper;
 
     private Integer id;
-    private String name;
-    private String species;
-    private Integer watering;
-    private Integer minTemperature;
-    private String lastWatering;
+    private Plant plant;
     private Boolean isOutside;
 
     EditText nameText;
@@ -52,7 +50,7 @@ public class PlantFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plant_form);
-        mDbHelper = new PlantDBHelper(this);
+        dbHelper = new DBHelper(this);
         id = getIntent().getIntExtra(FINAL_PLANT_ID, 0);
 
         nameText = findViewById(R.id.name_edit_text);
@@ -72,7 +70,6 @@ public class PlantFormActivity extends AppCompatActivity {
 
         if (id != 0) {
             dataGetter();
-            dataSetter();
             TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(R.string.edit_the_plant);
         }
@@ -101,53 +98,26 @@ public class PlantFormActivity extends AppCompatActivity {
         super.onResume();
         if (id != 0) {
             dataGetter();
-            dataSetter();
         }
     }
 
     protected void dataGetter (){
-        String [] projection = {PlantContract.COLUMN_NAME,
-                PlantContract.COLUMN_SPECIES,
-                PlantContract.COLUMN_WATERING,
-                PlantContract.COLUMN_MIN_TEMP,
-                PlantContract.COLUMN_LAST_WATERING,
-                PlantContract.COLUMN_IS_OUTSIDE
-        };
-        String selection = PlantContract._ID + "=?";
-        String [] selectionArgs = {String.valueOf(id)};
-
-        Cursor cursor = getContentResolver().query(PlantContract.CONTENT_URI_ID(id), projection, selection, selectionArgs, null);
-
-        int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
-        int speciesColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_SPECIES);
-        int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
-        int minTempColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
-        int lastWateringColumnIndex  = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
-        int isOutsideColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_IS_OUTSIDE);
-
-        while (cursor.moveToNext()){
-            name = cursor.getString(nameColumnIndex);
-            species = cursor.getString(speciesColumnIndex);
-            watering = cursor.getInt(wateringColumnIndex);
-            minTemperature = cursor.getInt(minTempColumnIndex);
-            lastWatering = cursor.getString(lastWateringColumnIndex);
-            isOutside = cursor.getInt(isOutsideColumnIndex) == 1;
-        }
-        cursor.close();
-    }
-
-    private void dataSetter (){
-        nameText.setText(name);
-        speciesText.setText(species);
-        wateringText.setText(watering.toString());
-        lastWateringText.setText(lastWatering);
-        minTempText.setText(minTemperature.toString());
-        if (isOutside){
-            isOutsideTrue.setChecked(true);
-            isOutsideFalse.setChecked(false);
-        } else {
-            isOutsideTrue.setChecked(false);
-            isOutsideFalse.setChecked(true);
+        try {
+            plant = dbHelper.getById(id);
+            nameText.setText(plant.getName());
+            speciesText.setText(plant.getSpecies());
+            wateringText.setText(String.valueOf(plant.getWatering()));
+            lastWateringText.setText(plant.getLastWatering());
+            minTempText.setText(String.valueOf(plant.getMinTemp()));
+            if (plant.getIsOutside() == 1){
+                isOutsideTrue.setChecked(true);
+                isOutsideFalse.setChecked(false);
+            } else {
+                isOutsideTrue.setChecked(false);
+                isOutsideFalse.setChecked(true);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
     }
@@ -159,43 +129,42 @@ public class PlantFormActivity extends AppCompatActivity {
         String minTemp = minTempText.getText().toString();
         String lastWatering = lastWateringText.getText().toString();
 
-        if (name.isEmpty() || species.isEmpty() || watering.isEmpty() || minTemp.isEmpty() || lastWatering.isEmpty() || isOutside == null){
+        if (name.isEmpty() || species.isEmpty() || watering.isEmpty() || minTemp.isEmpty() || lastWatering.isEmpty() || (!isOutsideFalse.isChecked() && !isOutsideTrue.isChecked())){
             Toast.makeText(this, "Missing data!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int wateringInt = Integer.parseInt(watering);
-        int minTempInt = Integer.parseInt(minTemp);
+        if (plant == null)
+            plant = new Plant();
+        plant.setName(name);
+        plant.setSpecies(species);
+        plant.setWatering(Integer.parseInt(watering));
+        plant.setMinTemp(Integer.parseInt(minTemp));
+        plant.setLastWatering(lastWatering);
+        if (isOutside == null)
+            isOutside = isOutsideTrue.isChecked();
+        plant.setIsOutside(isOutside ? 1 : 0);
 
-        ContentValues values = new ContentValues();
-        values.put(PlantContract.COLUMN_NAME, name);
-        values.put(PlantContract.COLUMN_SPECIES, species);
-        values.put(PlantContract.COLUMN_WATERING, wateringInt);
-        values.put(PlantContract.COLUMN_MIN_TEMP, minTempInt);
-        values.put(PlantContract.COLUMN_LAST_WATERING, lastWatering);
-        values.put(PlantContract.COLUMN_IS_OUTSIDE, isOutside ? 1 : 0);
+        Dao.CreateOrUpdateStatus result = null;
 
-        if (this.id == 0) {
-            Uri newUri = getContentResolver().insert(PlantContract.CONTENT_URI, values);
-            if (newUri == null) {
-                Toast.makeText(this, "Adding plant failed", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Plant has been added successfully", Toast.LENGTH_SHORT).show();
-                setResult(Activity.RESULT_OK);
-                finish();
-            }
+        try{
+            result = dbHelper.createOrUpdate(plant);
+        } catch (SQLException e){
+            System.out.println("unable to add plant");
         }
 
+        if (result.isCreated()){
+            Toast.makeText(this, "Plant has been created successfully", Toast.LENGTH_SHORT).show();
+            setResult(Activity.RESULT_OK);
+            finish();
+        }
+        else if (result.isUpdated()){
+            Toast.makeText(this, "Plant has been updated successfully", Toast.LENGTH_SHORT).show();
+            setResult(Activity.RESULT_OK);
+            finish();
+        }
         else{
-            int rows = getContentResolver().update(PlantContract.CONTENT_URI_ID(id), values, null, null);
-            if (rows == 0){
-                Toast.makeText(this, "Saving updated plant failed", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(this, "Plant has been updated successfully", Toast.LENGTH_SHORT).show();
-                setResult(Activity.RESULT_OK);
-                finish();
-            }
+            Toast.makeText(this, "Saving updated plant failed", Toast.LENGTH_SHORT).show();
         }
     }
 

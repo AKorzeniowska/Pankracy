@@ -1,29 +1,27 @@
 package com.agh.edu.pankracy.adapters;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.agh.edu.pankracy.R;
-import com.agh.edu.pankracy.data.PlantContract;
+//import com.agh.edu.pankracy.data.PlantContract;
+import com.agh.edu.pankracy.data.plants.DBHelper;
 import com.agh.edu.pankracy.data.plants.Plant;
 import com.agh.edu.pankracy.fragments.ListOfPlantsFragment;
 import com.agh.edu.pankracy.utils.DateUtils;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class PlantListAdapter extends BaseAdapter {
 
@@ -31,10 +29,12 @@ public class PlantListAdapter extends BaseAdapter {
     private LinkedHashMap<Integer, Plant> mData;
     private Integer[] mKeys;
     private ListOfPlantsFragment lopFragment;
+    private DBHelper dbHelper;
 
     public PlantListAdapter(Context context, LinkedHashMap<Integer, Plant> items,
                             ListOfPlantsFragment lopFragment) {
         this.context = context;
+        dbHelper = new DBHelper(context);
         this.mData = items;
         mKeys = mData.keySet().toArray(new Integer[items.size()]);
         this.lopFragment = lopFragment;
@@ -84,7 +84,7 @@ public class PlantListAdapter extends BaseAdapter {
         holder.title.setText(plant.getName());
 
         try {
-            if (plant.getLastWatering() != null && DateUtils.getNumberOfDaysBetweenGivenDateAndNextWateringMyGodThatsALongAssMethodName(new Date(), DateUtils.sdf.parse(plant.getLastWatering()), plant.getWatering()) < 0){
+            if (plant.getLastWatering() != null && DateUtils.getNumberOfDaysBetweenGivenDateAndNextWatering(new Date(), DateUtils.sdf.parse(plant.getLastWatering()), plant.getWatering()) < 0){
                 //changeColor
                 holder.icon.setColorFilter(ContextCompat.getColor(context, R.color.colorRedDimmed));
                 holder.waterIcon.setColorFilter(ContextCompat.getColor(context, R.color.colorRedDimmed));
@@ -100,9 +100,12 @@ public class PlantListAdapter extends BaseAdapter {
         holder.isOutsideIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues values = new ContentValues();
-                values.put(PlantContract.COLUMN_IS_OUTSIDE, plant.getIsOutside() == 0 ? 1 : 0);
-                context.getContentResolver().update(PlantContract.CONTENT_URI_ID((int) getItemId(position)), values, null, null);
+                plant.setIsOutside(plant.getIsOutside() == 0 ? 1 : 0);
+                try {
+                    dbHelper.createOrUpdate(plant);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 lopFragment.listGetter();
                 lopFragment.chosenPlantIntentCreator();
             }
@@ -111,9 +114,12 @@ public class PlantListAdapter extends BaseAdapter {
         holder.waterIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues values = new ContentValues();
-                values.put(PlantContract.COLUMN_LAST_WATERING, DateUtils.sdf.format(new Date()));
-                context.getContentResolver().update(PlantContract.CONTENT_URI_ID((int) getItemId(position)), values, null, null);
+                plant.setLastWatering(DateUtils.sdf.format(new Date()));
+                try {
+                    dbHelper.createOrUpdate(plant);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 lopFragment.listGetter();
                 lopFragment.chosenPlantIntentCreator();
             }

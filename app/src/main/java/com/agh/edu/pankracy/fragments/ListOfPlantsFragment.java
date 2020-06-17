@@ -21,12 +21,15 @@ import com.agh.edu.pankracy.PlantDetailsActivity;
 import com.agh.edu.pankracy.PlantFormActivity;
 import com.agh.edu.pankracy.R;
 import com.agh.edu.pankracy.adapters.PlantListAdapter;
-import com.agh.edu.pankracy.data.PlantContract;
-import com.agh.edu.pankracy.data.PlantDBHelper;
+//import com.agh.edu.pankracy.data.PlantContract;
+//import com.agh.edu.pankracy.data.PlantDBHelper;
+import com.agh.edu.pankracy.data.plants.DBHelper;
 import com.agh.edu.pankracy.data.plants.Plant;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +39,7 @@ import java.util.LinkedHashMap;
 public class ListOfPlantsFragment extends Fragment {
     private static final String LOG_TAG = ListOfPlantsFragment.class.getSimpleName();
 
-    private PlantDBHelper mDbHelper;
+    private DBHelper dbHelper;
     private LinkedHashMap<Integer, Plant> listViewData = new LinkedHashMap<>();
     private ArrayList<Integer> idList = new ArrayList<>();
     private final static String FINAL_PLANT_ID = "final_plant_id";
@@ -44,7 +47,6 @@ public class ListOfPlantsFragment extends Fragment {
     PlantListAdapter adapter;
 
     public ListOfPlantsFragment() {
-        // Required empty public constructor
     }
 
     public static ListOfPlantsFragment newInstance() {
@@ -54,7 +56,7 @@ public class ListOfPlantsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDbHelper = new PlantDBHelper(getActivity());
+        dbHelper = new DBHelper(getActivity());
     }
 
     @Override
@@ -87,30 +89,14 @@ public class ListOfPlantsFragment extends Fragment {
 
     public void listGetter(){
         listViewData.clear();
-        String [] projection = {PlantContract._ID, PlantContract.COLUMN_NAME, PlantContract.COLUMN_SPECIES, PlantContract.COLUMN_LAST_WATERING, PlantContract.COLUMN_WATERING, PlantContract.COLUMN_MIN_TEMP, PlantContract.COLUMN_IS_OUTSIDE};
-        Cursor cursor = getActivity().getContentResolver().query(PlantContract.CONTENT_URI, projection, null, null, null);
-
-        int nameColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_NAME);
-        int speciesColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_SPECIES);
-        int isOutsideColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_IS_OUTSIDE);
-        int wateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_WATERING);
-        int minTempColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_MIN_TEMP);
-        int lastWateringColumnIndex = cursor.getColumnIndex(PlantContract.COLUMN_LAST_WATERING);
-        int idColumnIndex = cursor.getColumnIndex(PlantContract._ID);
-
-        while (cursor.moveToNext()){
-            Integer currentId = Integer.parseInt(cursor.getString(idColumnIndex));
-            Plant plant = new Plant(
-                    cursor.getString(nameColumnIndex),
-                    cursor.getString(speciesColumnIndex),
-                    cursor.getInt(wateringColumnIndex),
-                    cursor.getInt(minTempColumnIndex),
-                    cursor.getString(lastWateringColumnIndex),
-                    cursor.getInt(isOutsideColumnIndex)
-            );
-            listViewData.put(currentId, plant);
+        try {
+            List<Plant> data = dbHelper.getAll();
+            for (Plant plant : data){
+                listViewData.put((int)plant.getId(), plant);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
         }
-        cursor.close();
 
         adapter = new PlantListAdapter(getActivity(), listViewData, this);
         listView.setAdapter(adapter);
