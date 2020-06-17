@@ -14,10 +14,9 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import java.util.ArrayList;
 
 public class EventsListAdapter extends BaseAdapter {
-    private Context context; //context
-    private ArrayList<Event> items; //data source of the list adapter
+    private Context context;
+    private ArrayList<Event> items;
 
-    //public constructor 
     public EventsListAdapter(Context context, ArrayList<Event> items) {
         this.context = context;
         this.items = items;
@@ -25,12 +24,12 @@ public class EventsListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return items.size(); //returns total of items in the list
+        return items.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return items.get(position); //returns list item at the specified position
+        return items.get(position);
     }
 
     @Override

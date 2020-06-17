@@ -12,7 +12,6 @@ import com.agh.edu.pankracy.R;
 public class AboutFragment extends Fragment {
 
     public AboutFragment() {
-        // Required empty public constructor
     }
     public static AboutFragment newInstance() {
         return new AboutFragment();

@@ -78,7 +78,6 @@ public class PlantDetailsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         dataGetter();
-//        dataSetter();
     }
 
     protected void dataGetter (){

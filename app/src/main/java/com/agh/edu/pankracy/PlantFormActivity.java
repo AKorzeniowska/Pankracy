@@ -36,13 +36,13 @@ public class PlantFormActivity extends AppCompatActivity {
     private Plant plant;
     private Boolean isOutside;
 
-    EditText nameText;
-    EditText speciesText;
-    EditText wateringText;
-    EditText minTempText;
-    TextView lastWateringText;
-    RadioButton isOutsideTrue;
-    RadioButton isOutsideFalse;
+    private EditText nameText;
+    private EditText speciesText;
+    private EditText wateringText;
+    private EditText minTempText;
+    private TextView lastWateringText;
+    private RadioButton isOutsideTrue;
+    private RadioButton isOutsideFalse;
 
     private DatePickerDialog.OnDateSetListener datePickerListener;
 

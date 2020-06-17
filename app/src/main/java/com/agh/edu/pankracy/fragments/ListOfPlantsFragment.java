@@ -41,10 +41,9 @@ public class ListOfPlantsFragment extends Fragment {
 
     private DBHelper dbHelper;
     private LinkedHashMap<Integer, Plant> listViewData = new LinkedHashMap<>();
-    private ArrayList<Integer> idList = new ArrayList<>();
     private final static String FINAL_PLANT_ID = "final_plant_id";
     private ListView listView;
-    PlantListAdapter adapter;
+    private PlantListAdapter adapter;
 
     public ListOfPlantsFragment() {
     }

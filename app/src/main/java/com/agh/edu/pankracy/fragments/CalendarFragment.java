@@ -71,7 +71,6 @@ public class CalendarFragment extends Fragment {
     private DBHelper dbHelper;
 
     public CalendarFragment() {
-        // Required empty public constructor
     }
 
     public static CalendarFragment newInstance() {
@@ -143,6 +142,23 @@ public class CalendarFragment extends Fragment {
         });
     }
 
+    private void setWindEvent(Date date) throws ParseException{
+        Double todayWind = getMaximalWindSpeedForDate(date);
+        if (todayWind != null && todayWind > WIND_SPEED_THRESHOLD){
+            CalendarEvent calendarEvent = new CalendarEvent(CalendarEvent.WINDY);
+            Event event = new Event(windyColor, date.getTime(), calendarEvent);
+            compactCalendar.addEvent(event);
+        }
+    }
+
+    private void setTemperatureEvent(Plant plant, Double temperature, Date date){
+        if (temperature != null && temperature <= plant.getMinTemp()) {
+            CalendarEvent calendarEvent = new CalendarEvent(plant.getName(), (int)plant.getId(), CalendarEvent.TOO_COLD);
+            Event tempEvent = new Event(lowTemperatureColor, date.getTime(), calendarEvent);
+            compactCalendar.addEvent(tempEvent);
+        }
+    }
+
     private void getData() throws ParseException {
         compactCalendar.removeAllEvents();
 
@@ -150,32 +166,17 @@ public class CalendarFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         c.setTime(today);
         Double todayTemp = getMinimalTemperatureForDate(today);
-        Double todayWind = getMaximalWindSpeedForDate(today);
-        if (todayWind != null && todayWind > WIND_SPEED_THRESHOLD){
-            CalendarEvent calendarEvent = new CalendarEvent(CalendarEvent.WINDY);
-            Event event = new Event(windyColor, today.getTime(), calendarEvent);
-            compactCalendar.addEvent(event);
-        }
+        setWindEvent(today);
 
         c.add(Calendar.DATE, 1);
         Date tomorrow = c.getTime();
         Double tomorrowTemp = getMinimalTemperatureForDate(tomorrow);
-        Double tomorrowWind = getMaximalWindSpeedForDate(tomorrow);
-        if (tomorrowWind != null && tomorrowWind > WIND_SPEED_THRESHOLD){
-            CalendarEvent calendarEvent = new CalendarEvent(CalendarEvent.WINDY);
-            Event event = new Event(windyColor, tomorrow.getTime(), calendarEvent);
-            compactCalendar.addEvent(event);
-        }
+        setWindEvent(tomorrow);
 
         c.add(Calendar.DATE, 1);
         Date inTwoDays = c.getTime();
         Double inTwoDaysTemp = getMinimalTemperatureForDate(inTwoDays);
-        Double inTwoDaysWind = getMaximalWindSpeedForDate(inTwoDays);
-        if (inTwoDaysWind != null && inTwoDaysWind > WIND_SPEED_THRESHOLD){
-            CalendarEvent calendarEvent = new CalendarEvent(CalendarEvent.WINDY);
-            Event event = new Event(windyColor, inTwoDays.getTime(), calendarEvent);
-            compactCalendar.addEvent(event);
-        }
+        setWindEvent(inTwoDays);
 
         try {
             List<Plant> plants = dbHelper.getAll();
@@ -184,35 +185,20 @@ public class CalendarFragment extends Fragment {
                 Event event;
                 Date nextWateringDate = DateUtils.getNextWateringDate(lastWatering, plant.getWatering());
 
-                if (nextWateringDate.before(new Date())) {
-                    CalendarEvent calendarEvent = new CalendarEvent(plant.getName(), (int)plant.getId(), CalendarEvent.WATERING);
-                    event = new Event(forgotToWaterColor, nextWateringDate.getTime(), calendarEvent);
-                }
-                else {
+                if (nextWateringDate.after(today)) {
                     CalendarEvent calendarEvent = new CalendarEvent(plant.getName(), (int)plant.getId(), CalendarEvent.FORGOT_TO_WATER);
                     event = new Event(wateringColor, nextWateringDate.getTime(), calendarEvent);
                 }
+                else {
+                    CalendarEvent calendarEvent = new CalendarEvent(plant.getName(), (int)plant.getId(), CalendarEvent.WATERING);
+                    event = new Event(forgotToWaterColor, nextWateringDate.getTime(), calendarEvent);
+                }
                 compactCalendar.addEvent(event);
 
-
                 if (plant.getIsOutside() == 1) {
-                    if (todayTemp != null && todayTemp <= plant.getMinTemp()) {
-                        CalendarEvent calendarEvent = new CalendarEvent(plant.getName(), (int)plant.getId(), CalendarEvent.TOO_COLD);
-                        Event tempEvent = new Event(lowTemperatureColor, today.getTime(), calendarEvent);
-                        compactCalendar.addEvent(tempEvent);
-                    }
-
-                    if (tomorrowTemp != null && tomorrowTemp <= plant.getMinTemp()) {
-                        CalendarEvent calendarEvent = new CalendarEvent(plant.getName(), (int)plant.getId(), CalendarEvent.TOO_COLD);
-                        Event tempEvent = new Event(lowTemperatureColor, tomorrow.getTime(), calendarEvent);
-                        compactCalendar.addEvent(tempEvent);
-                    }
-
-                    if (inTwoDaysTemp != null && inTwoDaysTemp <= plant.getMinTemp()) {
-                        CalendarEvent calendarEvent = new CalendarEvent(plant.getName(), (int)plant.getId(), CalendarEvent.TOO_COLD);
-                        Event tempEvent = new Event(lowTemperatureColor, inTwoDays.getTime(), calendarEvent);
-                        compactCalendar.addEvent(tempEvent);
-                    }
+                    setTemperatureEvent(plant, todayTemp, today);
+                    setTemperatureEvent(plant, tomorrowTemp, tomorrow);
+                    setTemperatureEvent(plant, inTwoDaysTemp, inTwoDays);
                 }
             }
         } catch (SQLException e) {
@@ -267,25 +253,7 @@ public class CalendarFragment extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
                 selectedDayEvents.remove(position);
                 eventsListAdapter.notifyDataSetChanged();
-                if (calendarEvent.getEventType() == CalendarEvent.FORGOT_TO_WATER || calendarEvent.getEventType() == CalendarEvent.WATERING){
-                    String today = DateUtils.sdf.format(new Date());
-                    try {
-                        Plant plant = dbHelper.getById(calendarEvent.getPlantId());
-                        plant.setLastWatering(today);
-                        dbHelper.createOrUpdate(plant);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else if (calendarEvent.getEventType() == CalendarEvent.TOO_COLD){
-                    try {
-                        Plant plant = dbHelper.getById(calendarEvent.getPlantId());
-                        plant.setIsOutside(0);
-                        dbHelper.createOrUpdate(plant);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
+                positiveButtonLogic(calendarEvent);
                 try {
                     getData();
                 } catch (ParseException e) {
@@ -303,5 +271,32 @@ public class CalendarFragment extends Fragment {
 
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private void positiveButtonLogic(CalendarEvent calendarEvent){
+        if (calendarEvent.getEventType() == CalendarEvent.FORGOT_TO_WATER || calendarEvent.getEventType() == CalendarEvent.WATERING){
+            String today = DateUtils.sdf.format(new Date());
+            try {
+                Plant plant = dbHelper.getById(calendarEvent.getPlantId());
+                plant.setLastWatering(today);
+                dbHelper.createOrUpdate(plant);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (calendarEvent.getEventType() == CalendarEvent.TOO_COLD){
+            try {
+                Plant plant = dbHelper.getById(calendarEvent.getPlantId());
+                plant.setIsOutside(0);
+                dbHelper.createOrUpdate(plant);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            getData();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
